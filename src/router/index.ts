@@ -5,6 +5,7 @@ import express from 'express';
 import authMiddleware from '../middleware';
 import { validateEmail } from '../middleware/emailValidator';
 import { forgotPassword, resetpassword } from '../controllers/passwordreset';
+import { createProfileHandler } from 'controllers/createprofile';
 // import { getCategory, postcategory, getCatgeoryById, updatecategory, deletecategoryById } from '../controllers/category';
 // import { upload } from '../utils/upload';
 // import { deletecommentById, getcommentById, getcomments, postcomment, updatecomment } from '../controllers/comment';
@@ -25,6 +26,8 @@ routes.post("/refreshtoken",refreshToken)
 routes.post("/forgot-password", validateEmail, forgotPassword)
 routes.post("/reset-password", resetpassword)
 
+
+routes.post("/createProfile", createProfileHandler);
 // routes.get("/getuserbyemail", authenticateJWT, getuserBymail)
 // routes.get("/getuserbykinde", authenticateJWT, getuserByKinde)
 // routes.patch("/updateuser", authenticateJWT, putUser)
