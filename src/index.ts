@@ -44,8 +44,9 @@ passport.use(new LocalStrategy({ usernameField: 'email', passwordField: 'passwor
         console.log(email)
         const user = await db.select({ password: users.password, id:users.id, email:users.email }).from(users).where(eq(users.email, email));
         console.log(user)
-        if (!user) return done(null, false, { message: 'Incorrect email.' });
-        const isValid = await checkPassword(password, user[0].password)
+        if (!user[0]?.email) return done(null, false, { message: 'Incorrect email.' });
+    
+        const isValid = await checkPassword(password, user[0]?.password)
         if (!isValid) return done(null, false, { message: 'Incorrect password.' });
         return done(null, user);
     } catch (err) {

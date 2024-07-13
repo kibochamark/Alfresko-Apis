@@ -35,7 +35,15 @@ export const getUserByEmail = async (email: string) => {
 }
 
 
-export const createUser = async (user: any) => {
+export const createUser = async (user: {
+    
+        email: string;
+        password: string;
+        salt: string;
+        role_id: number;
+       
+    
+}) => {
     return await db.insert(users).values(user).returning({
         id: users.id,
         email: users.email,

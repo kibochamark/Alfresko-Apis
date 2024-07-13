@@ -13,7 +13,8 @@ export async function loginUser(req: express.Request, response: express.Response
         passport.authenticate('local', async (err: any, user: any, info: any) => {
             if (err) return next(err);
             if (!user) return response.status(401).json({ message: info.message }).end();
-            console.log(user, "user")
+            
+            
             const { accessToken, refreshToken } = generateTokens(user[0]);
             await insertRefreshToken(refreshToken, user[0].id)
 
@@ -37,14 +38,18 @@ export async function registerUser(req: express.Request, response: express.Respo
     const { hashedPassword, salt } = await createHash(password);
 
 
+    
 
     try {
         const user = await createUser({
             email: email,
             password: hashedPassword,
             salt: salt,
-            role_id: parseInt(role)
+            role_id: parseInt(role),
+           
         })
+
+        
 
         response.status(201).json(user).end();
     } catch (err) {
@@ -58,7 +63,7 @@ export const refreshToken = async (req: express.Request, response: express.Respo
 
     try {
         const decoded = verifyRefreshToken(apprefreshToken);
-        console.log(decoded, "dec")
+        
         const user = await getUser(parseInt(decoded.id));
         if (!user) return response.status(403).json({ message: 'User not found' });
 
