@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import db from "../utils/connection"
-import { User, refreshTokens, users } from './schema';
+import { User, profiles, refreshTokens, users } from './schema';
 import { hashPassword } from '../utils/authenticationUtilities';
 import { createHash } from "../utils/HasherPassword";
 
@@ -63,3 +63,23 @@ export const updatePassword = async (userId: number, newPassword: string) => {
     return await db.update(users).set({ password: hashedPassword }).where(eq(users.id, userId));
 
 };
+export const createProfile = async (userType: string, name: string, phone: string, address: string) => {
+    return await db.insert(profiles).values({
+        user_type: userType,
+        name: name,
+        phone: phone,
+        address: address,
+        created_at: new Date(),
+        updated_at: new Date()
+    }).returning({
+        id: profiles.id,
+        user_type: profiles.user_type,
+        name: profiles.name,
+        phone: profiles.phone,
+        address: profiles.address,
+        created_at: profiles.created_at,
+        updated_at: profiles.updated_at
+    });
+};
+
+
