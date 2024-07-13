@@ -5,7 +5,7 @@ import express from 'express';
 import authMiddleware from '../middleware';
 import { validateEmail } from '../middleware/emailValidator';
 import { forgotPassword, resetpassword } from '../controllers/passwordreset';
-import { createProfileHandler } from 'controllers/createprofile';
+import { createProfileHandler } from '../controllers/createprofile';
 // import { getCategory, postcategory, getCatgeoryById, updatecategory, deletecategoryById } from '../controllers/category';
 // import { upload } from '../utils/upload';
 // import { deletecommentById, getcommentById, getcomments, postcomment, updatecomment } from '../controllers/comment';
