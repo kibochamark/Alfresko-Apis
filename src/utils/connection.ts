@@ -17,7 +17,7 @@ import * as schema from "../db/schema"
 // })
 // import { Pool } from '@neondatabase/serverless';
 
-const pool = new Pool({ connectionString: "postgresql://Alfresko_owner:rTJVEt3qGaH8@ep-wild-cherry-a5phky7j-pooler.us-east-2.aws.neon.tech/Alfresko?sslmode=require" });
+const pool = new Pool({ connectionString: "postgresql://neondb_owner:30WYKdxVMhnQ@ep-rapid-snow-a26ly6wq-pooler.eu-central-1.aws.neon.tech/neondb?sslmode=require" });
 const db = drizzle(pool)
 
 // const sql = neon("postgresql://blog_owner:cvQlHMJK0L2T@ep-cold-dust-a5ex9ahi.us-east-2.aws.neon.tech/blog?sslmode=require");
