@@ -5,7 +5,7 @@ import express from 'express';
 import authMiddleware from '../middleware';
 import { validateEmail } from '../middleware/emailValidator';
 import { forgotPassword, resetpassword } from '../controllers/passwordreset';
-import { createProfileHandler } from '../controllers/createprofile';
+import { createProfileHandler } from '../controllers/profile';
 import checkTokenBlacklist from '../middleware/blacklist';
 import { createRole, deleteRole, getRole, getRoles, updateRole } from '../controllers/roles';
 import { assignpermissiontorole, createPermission, deletePermission, getPermission, updatePermission } from '../controllers/permissions';
@@ -21,8 +21,8 @@ const routes = express.Router();
 // // auth user
 
 // routes.get("/getusers", authenticateJWT, getusers)
-routes.post("/registeruser", registerUser)
-routes.post("/loginuser",loginUser)
+routes.post("/registeruser",validateEmail, registerUser)
+routes.post("/loginuser",validateEmail,loginUser)
 routes.post("/refreshtoken",refreshToken)
 routes.get("/testlogout", checkTokenBlacklist, authMiddleware, testlogout)
 routes.post("/logout",  authMiddleware, logoutUser)
