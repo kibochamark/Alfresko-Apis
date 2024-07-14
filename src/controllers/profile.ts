@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
-import { createProfile, updateUser } from '../db';
+import { createProfile, nullifyProfileInUsers, updateUser } from '../db';
 import { updateProfile } from '../db';
+import { deleteProfile } from '../db';
 import { getPayloadFromToken } from '../utils/authenticationUtilities';
 
 export async function createProfileHandler(req: Request, res: Response) {
@@ -50,6 +51,36 @@ export async function updateProfileHandler(req: Request, res: Response) {
     } catch (err) {
         res.status(500).json({
             error: err?.message || "Failed to update profile"
+        });
+    }
+}
+//Delete Profile
+export async function deleteProfileHandler(req: Request, res: Response) {
+    try {
+        const id = req.query.id as string;
+
+        if (!id) {
+            return res.status(400).json({
+                error: "Profile ID is missing in query"
+            });
+        }
+
+        // Nullify the profile_id in users table before deleting the profile
+        await nullifyProfileInUsers(parseInt(id));
+
+        const profile = await deleteProfile(parseInt(id));
+
+        if (!profile.length) {
+            return res.status(404).json({
+                error: "Profile not found"
+            });
+        }
+
+        return res.status(204).json().end();
+
+    } catch (err) {
+        res.status(500).json({
+            error: err?.message || "Failed to delete profile"
         });
     }
 }

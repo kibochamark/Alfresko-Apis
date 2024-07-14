@@ -5,9 +5,8 @@ import express from 'express';
 import authMiddleware from '../middleware';
 import { validateEmail } from '../middleware/emailValidator';
 import { forgotPassword, resetpassword } from '../controllers/passwordreset';
-import { createProfileHandler } from '../controllers/profile';
 import checkTokenBlacklist from '../middleware/blacklist';
-import { updateProfileHandler } from '../controllers/profile';
+import { createProfileHandler, updateProfileHandler, deleteProfileHandler } from '../controllers/profile';
 import { createRole, deleteRole, getRole, getRoles, updateRole } from '../controllers/roles';
 import { assignpermissiontorole, createPermission, deletePermission, getPermission, updatePermission } from '../controllers/permissions';
 // import { getCategory, postcategory, getCatgeoryById, updatecategory, deletecategoryById } from '../controllers/category';
@@ -35,6 +34,7 @@ routes.post("/reset-password", resetpassword)
 // profile
 routes.post("/createprofile", checkTokenBlacklist, authMiddleware, createProfileHandler)
 routes.put("/updateProfile", updateProfileHandler)
+routes.delete("/deleteProfile", deleteProfileHandler);
 
 // role
 routes.get("/getrole", checkTokenBlacklist, authMiddleware, getRole)

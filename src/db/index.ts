@@ -120,8 +120,21 @@ export const updateProfile = async (profileId: number, updates: any) => {
         updated_at: profiles.updated_at
     });
 };
-
-
+//Delete Profile
+export const deleteProfile = async (profileId: number) => {
+    return await db.delete(profiles).where(eq(profiles.id, profileId)).returning({
+        id: profiles.id,
+        user_type: profiles.user_type,
+        name: profiles.name,
+        phone: profiles.phone,
+        address: profiles.address,
+        created_at: profiles.created_at,
+        updated_at: profiles.updated_at
+    });
+};
+export const nullifyProfileInUsers = async (profileId: number) => {
+    return await db.update(users).set({ profile_id: null }).where(eq(users.profile_id, profileId));
+};
 
 // Permissions
 
