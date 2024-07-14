@@ -1,4 +1,4 @@
-import { createrole, deleterole, getrole, getroles, updaterole } from "db";
+import { createrole, deleterole, getrole, getroles, updaterole } from "../db";
 import express from "express";
 
 export async function getRoles(req: express.Request, res: express.Response) {

@@ -1,6 +1,6 @@
 import express from 'express';
 import { getPayloadFromToken } from '../utils/authenticationUtilities';
-import { assignPermissionsToRole, createpermission, deletepermission, getpermission, updatepermission } from 'db';
+import { assignPermissionsToRole, createpermission, deletepermission, getpermission, updatepermission } from '../db';
 
 export async function getPermission(req: express.Request, res: express.Response) {
     try {
