@@ -11,16 +11,7 @@ export const roles = pgTable("roles", {
     updated_at: timestamp("updated_at").defaultNow().$onUpdate(() => new Date())
 });
 
-// Profiles Table
-export const profiles = pgTable("profiles", {
-    id: serial('id').primaryKey(),
-    user_type: text('user_type').notNull(),
-    name: text('name').notNull(),
-    phone: varchar('phone'),
-    address: text('address'),
-    created_at: timestamp('created_at').defaultNow(),
-    updated_at: timestamp("updated_at").defaultNow().$onUpdate(() => new Date())
-});
+
 
 // Users Table
 export const users = pgTable("users", {
@@ -32,6 +23,18 @@ export const users = pgTable("users", {
     salt: varchar('salt').notNull(),
     created_at: timestamp('created_at').defaultNow(),
     updated_at: timestamp('updated_at').defaultNow().$onUpdate(() => new Date())
+});
+
+
+// Profiles Table
+export const profiles = pgTable("profiles", {
+    id: serial('id').primaryKey(),
+    user_type: text('user_type').notNull(),
+    name: text('name').notNull(),
+    phone: varchar('phone'),
+    address: text('address'),
+    created_at: timestamp('created_at').defaultNow(),
+    updated_at: timestamp("updated_at").defaultNow().$onUpdate(() => new Date())
 });
 
 // Permissions Table
@@ -168,13 +171,15 @@ export const rolePermissionRelations = relations(rolePermissions, ({ one }) => (
 
 export type User = InferModel<typeof users>;
 // Define Role type
-export type Role = InferModel<typeof roles>;
+export type Role = InferModel<typeof roles, 'select'>;
+export type InsertRole = InferModel<typeof roles, 'insert'>;
 
 // Define Profile type
 export type Profile = InferModel<typeof profiles>;
 
 // Define Permission type
-export type Permission = InferModel<typeof permissions>;
+export type Permission = InferModel<typeof permissions, 'select'>;
+export type InsertPermission = InferModel<typeof permissions, 'insert'>;
 
 // Define RolePermission type
 export type RolePermission = InferModel<typeof rolePermissions>;

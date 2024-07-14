@@ -1,13 +1,13 @@
 import { eq } from "drizzle-orm";
 import db from "../utils/connection"
-import { User, profiles, refreshTokens, users } from './schema';
+import { InsertPermission, InsertRole, User, permissions, profiles, refreshTokens, rolePermissions, roles, users } from './schema';
 import { hashPassword } from '../utils/authenticationUtilities';
 import { createHash } from "../utils/HasherPassword";
 
 
 
 
-
+// tokens  ----------------------------------------------
 export const insertRefreshToken = async (refreshToken: string, user_id: number) => {
     return await db.insert(refreshTokens).values({ user_id: user_id, token: refreshToken }).returning({
         id: refreshTokens.id,
@@ -21,6 +21,8 @@ export const deleteRefreshToken = async (token: string) => {
     return await db.delete(refreshTokens).where(eq(refreshTokens.token, token))
 
 }
+
+
 
 // users -----------------------------
 
@@ -51,6 +53,25 @@ export const createUser = async (user: {
         profile: users.profile_id
     });
 }
+export const updateUser = async (user: {
+    
+        email?: string;
+        password?: string;
+        salt?: string;
+        role_id?: number;
+        profile_id?:number;
+       
+    
+}, id:number) => {
+    return await db.update(users).set(user).where(eq(users.id, id)).returning({
+        id: users.id,
+        email: users.email,
+        role: users.role_id,
+        profile: users.profile_id
+    });
+}
+
+
 
 
 // forgot password ---------------------------------------------
@@ -63,6 +84,11 @@ export const updatePassword = async (userId: number, newPassword: string) => {
     return await db.update(users).set({ password: hashedPassword }).where(eq(users.id, userId));
 
 };
+
+
+
+
+// profile -----------------------------------------------
 export const createProfile = async (userType: string, name: string, phone: string, address: string) => {
     return await db.insert(profiles).values({
         user_type: userType,
@@ -83,3 +109,75 @@ export const createProfile = async (userType: string, name: string, phone: strin
 };
 
 
+
+// Permissions
+
+export const createpermission = async(perm:InsertPermission)=>{
+    return await db.insert(permissions).values(perm).returning({
+        id:permissions.id,
+        name:permissions.name,
+        description:permissions.description
+    })
+}
+export const updatepermission = async(perm:InsertPermission, id:number)=>{
+    return await db.update(permissions).set(perm).where(eq(permissions.id, id)).returning({
+        id:permissions.id,
+        name:permissions.name,
+        description:permissions.description
+    })
+}
+
+export const getpermission = async(id:number)=>{
+    return await db.select().from(permissions).where(eq(permissions.id, id))
+}
+export const deletepermission = async(id:number)=>{
+    return await db.delete(permissions).where(eq(permissions.id, id))
+}
+
+
+
+
+// roles
+export const createrole = async(role:InsertRole)=>{
+    return await db.insert(roles).values(role).returning({
+        id:roles.id,
+        name:roles.name,
+        description:roles.description
+    })
+}
+export const updaterole = async(role:InsertRole, id:number)=>{
+    return await db.update(roles).set(role). where(eq(roles.id, id)).returning({
+        id:roles.id,
+        name:roles.name,
+        description:roles.description
+    })
+}
+
+export const getrole = async(id:number)=>{
+    return await db.select().from(roles).where(eq(roles.id, id))
+}
+export const getroles = async()=>{
+    return await db.select().from(roles)
+}
+export const deleterole = async(id:number)=>{
+    return await db.delete(roles).where(eq(roles.id, id))
+}
+
+
+// role and permissions
+
+/**
+ * Assign one or more permissions to a role
+ * @param roleId - The ID of the role
+ * @param permissionIds - Array of permission IDs
+ */
+export async function assignPermissionsToRole(roleId: number, permissionIds: number[]): Promise<void> {
+    const values = permissionIds.map(permissionId => ({
+        role_id: roleId,
+        permission_id: permissionId,
+        created_at: new Date(),
+        updated_at: new Date()
+    }));
+
+    await db.insert(rolePermissions).values(values).onConflictDoNothing();
+}

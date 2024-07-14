@@ -7,6 +7,8 @@ import { validateEmail } from '../middleware/emailValidator';
 import { forgotPassword, resetpassword } from '../controllers/passwordreset';
 import { createProfileHandler } from '../controllers/createprofile';
 import checkTokenBlacklist from '../middleware/blacklist';
+import { createRole, deleteRole, getRole, getRoles, updateRole } from 'controllers/roles';
+import { assignpermissiontorole, createPermission, deletePermission, getPermission, updatePermission } from 'controllers/permissions';
 // import { getCategory, postcategory, getCatgeoryById, updatecategory, deletecategoryById } from '../controllers/category';
 // import { upload } from '../utils/upload';
 // import { deletecommentById, getcommentById, getcomments, postcomment, updatecomment } from '../controllers/comment';
@@ -29,11 +31,26 @@ routes.post("/logout",  authMiddleware, logoutUser)
 routes.post("/forgot-password", validateEmail, forgotPassword)
 routes.post("/reset-password", resetpassword)
 
+// profile
+routes.post("/createprofile", checkTokenBlacklist, authMiddleware, createProfileHandler);
 
-routes.post("/createProfile", createProfileHandler);
-// routes.get("/getuserbyemail", authenticateJWT, getuserBymail)
-// routes.get("/getuserbykinde", authenticateJWT, getuserByKinde)
-// routes.patch("/updateuser", authenticateJWT, putUser)
+// role
+routes.get("/getrole", checkTokenBlacklist, authMiddleware, getRole)
+routes.get("/getroles", checkTokenBlacklist, authMiddleware, getRoles)
+routes.delete("/deleterole", checkTokenBlacklist, authMiddleware, deleteRole)
+routes.patch("/updateuser", checkTokenBlacklist, authMiddleware, updateRole)
+routes.post("/createrole", checkTokenBlacklist, authMiddleware, createRole);
+
+// permission
+routes.get("/getpermission", checkTokenBlacklist, authMiddleware, getPermission)
+routes.get("/roles/:roleId/permissions", checkTokenBlacklist, authMiddleware,assignpermissiontorole)
+// routes.get("/getpermissions", checkTokenBlacklist, authMiddleware, getPer)
+routes.delete("/deletepermission", checkTokenBlacklist, authMiddleware, deletePermission)
+routes.patch("/updatepermission", checkTokenBlacklist, authMiddleware, updatePermission)
+routes.post("/createpermission", checkTokenBlacklist, authMiddleware, createPermission);
+
+
+
 // routes.delete("/deleteuser", authenticateJWT, removeUser)
 
 

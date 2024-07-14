@@ -63,3 +63,20 @@ export const verifyResetToken = (token: string): { userId: number } | null => {
         return null;
     }
 };
+
+
+
+export const getPayloadFromToken = (authHeader: string): JwtPayload | null => {
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        throw new Error('Invalid or missing authorization header');
+    }
+
+    const token = authHeader.substring(7); // Remove 'Bearer ' prefix
+    try {
+        const payload = jwt.verify(token, JWT_SECRET) as JwtPayload;
+        return payload;
+    } catch (error) {
+        console.error('Token verification failed:', error.message);
+        return null;
+    }
+};
