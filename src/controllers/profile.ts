@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { createProfile, nullifyProfileInUsers, updateUser } from '../db';
 import { updateProfile } from '../db';
 import { deleteProfile } from '../db';
+import { getUsersWithProfiles } from '../db';
 import { getPayloadFromToken } from '../utils/authenticationUtilities';
 
 export async function createProfileHandler(req: Request, res: Response) {
@@ -81,6 +82,21 @@ export async function deleteProfileHandler(req: Request, res: Response) {
     } catch (err) {
         res.status(500).json({
             error: err?.message || "Failed to delete profile"
+        });
+    }
+}
+//Getting the user with their profile
+export async function getUsersWithProfilesHandler(req: Request, res: Response) {
+    try {
+        const usersWithProfiles = await getUsersWithProfiles();
+
+        return res.status(200).json({
+            users: usersWithProfiles
+        });
+
+    } catch (err) {
+        res.status(500).json({
+            error: err?.message || "Failed to get users with profiles"
         });
     }
 }
