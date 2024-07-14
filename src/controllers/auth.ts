@@ -1,10 +1,12 @@
 import express from 'express';
 import passport from 'passport';
-import { generateTokens, verifyRefreshToken } from '../utils/authenticationUtilities';
+import { generateTokens, verifyAccessToken, verifyRefreshToken } from '../utils/authenticationUtilities';
 import { refreshTokens } from '../db/schema';
 import { createUser, deleteRefreshToken, getUser, insertRefreshToken } from '../db';
 import { createHash } from '../utils/HasherPassword';
 import { Request } from 'express';
+import { blacklistToken } from '../utils/tokenblacklist';
+import { JwtPayload } from 'jsonwebtoken';
 
 
 // controller to handle user login
@@ -99,19 +101,57 @@ export const refreshToken = async (req: express.Request, response: express.Respo
 //     }
 // );
 
-
 export async function logoutUser(req: express.Request, res: express.Response, next: express.NextFunction) {
-    const { refreshToken } = req.body;
-    if (!refreshToken) return res.status(403).json({ error: "Refresh token not included in schema" }).end()
+    const { refreshToken, accessToken } = req.body;
+    if (!refreshToken || !accessToken) return res.status(403).json({ error: "Refresh token or access token not included in schema" });
 
-    await deleteRefreshToken(refreshToken)
-    req.logout((err) => {
-        if (err) return next(err);
-        res.redirect('/');
-    });
-    return res.status(200).json({ message: "logged out successfully" }).end()
+    try {
+        await deleteRefreshToken(refreshToken);
 
+        const decodedToken = verifyAccessToken(accessToken) as JwtPayload; // Ensure decoded token is treated as JwtPayload
+        if (typeof decodedToken === 'string' || !decodedToken.exp) {
+            return res.status(403).json({ error: "Invalid access token" });
+        }
+
+        console.log(decodedToken.exp, "dec")
+
+        const expiryTime = decodedToken.exp - Math.floor(Date.now() / 1000); // Calculate expiry time in seconds
+        console.log(expiryTime, "exp")
+        await blacklistToken(accessToken, expiryTime); // Blacklist the access token
+
+        req.logout((err) => {
+            if (err) return next(err);
+            return res.status(200).json({ message: "Logged out successfully" });
+        });
+    } catch (err) {
+        return res.status(500).json({ error: err.message });
+    }
 }
+
+export async function testlogout(req: express.Request, res: express.Response, next: express.NextFunction){
+    return res.status(200).json({
+        message:"successfull"
+    }).end()
+}
+
+
+// Middleware to initiate Google OAuth with role as a query parameter
+// router.get('/auth/google', (req, res, next) => {
+//     const { role } = req.query;
+//     passport.authenticate('google', { scope: ['profile', 'email'], state: role })(req, res, next);
+// });
+// Google OAuth callback route
+// router.get('/auth/google/callback', (req, res, next) => {
+//     passport.authenticate('google', { failureRedirect: '/' }, async (err, user, info) => {
+//         if (err) return next(err);
+
+//         const { accessToken, refreshToken } = generateTokens(user);
+//         await insertRefreshToken(refreshToken, user.id);
+        
+//         return res.status(200).json({ accessToken, refreshToken });
+//     })(req, res, next);
+// });
+
 
 
 

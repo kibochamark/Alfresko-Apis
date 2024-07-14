@@ -1,11 +1,12 @@
 // import { deleteblog, files, getBlogByCategory, getBlogById, getBlogByUser, getBlogs, newPost, updateblog } from '../controllers/posts';
 // import { getuserByKinde, getuserBymail, getusers, newUser, putUser, removeUser } from '../controllers/auth';
-import { loginUser, refreshToken, registerUser } from '../controllers/auth';
+import { loginUser, logoutUser, refreshToken, registerUser, testlogout } from '../controllers/auth';
 import express from 'express';
 import authMiddleware from '../middleware';
 import { validateEmail } from '../middleware/emailValidator';
 import { forgotPassword, resetpassword } from '../controllers/passwordreset';
 import { createProfileHandler } from '../controllers/createprofile';
+import checkTokenBlacklist from '../middleware/blacklist';
 // import { getCategory, postcategory, getCatgeoryById, updatecategory, deletecategoryById } from '../controllers/category';
 // import { upload } from '../utils/upload';
 // import { deletecommentById, getcommentById, getcomments, postcomment, updatecomment } from '../controllers/comment';
@@ -21,6 +22,8 @@ const routes = express.Router();
 routes.post("/registeruser", registerUser)
 routes.post("/loginuser",loginUser)
 routes.post("/refreshtoken",refreshToken)
+routes.get("/testlogout", checkTokenBlacklist, authMiddleware, testlogout)
+routes.post("/logout",  authMiddleware, logoutUser)
 
 // Reset password
 routes.post("/forgot-password", validateEmail, forgotPassword)

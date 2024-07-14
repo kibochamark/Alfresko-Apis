@@ -55,18 +55,21 @@ passport.use(new LocalStrategy({ usernameField: 'email', passwordField: 'passwor
 }));
 
 // Google Strategy
+
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID || 'your-google-client-id',
     clientSecret: process.env.GOOGLE_CLIENT_SECRET || 'your-google-client-secret',
-    callbackURL: "/auth/google/callback"
-}, async (token, tokenSecret, profile, done) => {
+    callbackURL: "/auth/google/callback",
+    passReqToCallback: true
+}, async (req, token, tokenSecret, profile, done) => {
     try {
         let user = await db.select().from(users).where(eq(users.email, profile.emails[0].value));
-        if (!user) {
+        if (!user.length) {
+            const role = Array.isArray(req.query.state) ? req.query.state[0] : req.query.state || '2';
             let newUser = await db.insert(users).values({
                 email: profile.emails[0].value,
                 profile_id: null,
-                role_id: 2,
+                role_id: parseInt(role as string),
                 password: '',
                 salt: ''
             }).returning({
@@ -75,11 +78,11 @@ passport.use(new GoogleStrategy({
                 profile: users.profile_id,
                 created_at: users.created_at,
                 updated_at: users.updated_at
-
             });
             return done(null, newUser[0]);
+        } else {
+            return done(null, user[0]);
         }
-
     } catch (err) {
         return done(err);
     }
