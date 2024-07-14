@@ -197,7 +197,14 @@ export const getpermission = async(id:number)=>{
 export const deletepermission = async(id:number)=>{
     return await db.delete(permissions).where(eq(permissions.id, id))
 }
-
+//Delete User
+export const deleteUser = async (userId: number) => {
+    return await db.delete(users).where(eq(users.id, userId));
+};
+//delete refresh token to allow you to delete a user
+export const deleteRefreshTokensByUserId = async (userId: number) => {
+    return await db.delete(refreshTokens).where(eq(refreshTokens.user_id, userId));
+};
 
 
 

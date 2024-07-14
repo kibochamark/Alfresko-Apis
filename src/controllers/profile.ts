@@ -4,6 +4,7 @@ import { updateProfile } from '../db';
 import { deleteProfile } from '../db';
 import { getUsersWithProfiles } from '../db';
 import { getUserWithProfile } from '../db';
+import { deleteUser, deleteRefreshTokensByUserId } from '../db';
 import { getPayloadFromToken } from '../utils/authenticationUtilities';
 
 export async function createProfileHandler(req: Request, res: Response) {
@@ -127,6 +128,37 @@ export async function getUserWithProfileHandler(req: Request, res: Response) {
     } catch (err) {
         res.status(500).json({
             error: err?.message || "Failed to get user with profile"
+        });
+    }
+}
+//DELETE A USER
+export async function deleteUserHandler(req: Request, res: Response) {
+    try {
+        const { id } = req.params;
+
+        if (!id) {
+            return res.status(400).json({
+                error: "User ID is required"
+            });
+        }
+
+        // Delete refresh tokens for the user
+        await deleteRefreshTokensByUserId(parseInt(id));
+
+        // Delete the user
+        const user = await deleteUser(parseInt(id));
+
+        if (!user.rowCount) {
+            return res.status(404).json({
+                error: "User not found"
+            });
+        }
+
+        return res.status(204).json().end();
+
+    } catch (err) {
+        res.status(500).json({
+            error: err?.message || "Failed to delete user"
         });
     }
 }
