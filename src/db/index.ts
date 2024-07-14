@@ -135,7 +135,7 @@ export const deleteProfile = async (profileId: number) => {
 export const nullifyProfileInUsers = async (profileId: number) => {
     return await db.update(users).set({ profile_id: null }).where(eq(users.profile_id, profileId));
 };
-//Get User with profile
+//Get Users with profile
 export const getUsersWithProfiles = async () => {
     return await db
         .select({
@@ -153,6 +153,26 @@ export const getUsersWithProfiles = async () => {
         })
         .from(users)
         .leftJoin(profiles, eq(users.profile_id, profiles.id));
+};
+//Get a single user
+export const getUserWithProfile = async (userId: number) => {
+    return await db
+        .select({
+            id: users.id,
+            email: users.email,
+            profile: {
+                id: profiles.id,
+                user_type: profiles.user_type,
+                name: profiles.name,
+                phone: profiles.phone,
+                address: profiles.address,
+                created_at: profiles.created_at,
+                updated_at: profiles.updated_at
+            }
+        })
+        .from(users)
+        .leftJoin(profiles, eq(users.profile_id, profiles.id))
+        .where(eq(users.id, userId));
 };
 // Permissions
 
