@@ -108,6 +108,19 @@ export const createProfile = async (userType: string, name: string, phone: strin
     });
 };
 
+//Update profile 
+export const updateProfile = async (profileId: number, updates: any) => {
+    return await db.update(profiles).set(updates).where(eq(profiles.id, profileId)).returning({
+        id: profiles.id,
+        user_type: profiles.user_type,
+        name: profiles.name,
+        phone: profiles.phone,
+        address: profiles.address,
+        created_at: profiles.created_at,
+        updated_at: profiles.updated_at
+    });
+};
+
 
 
 // Permissions
@@ -181,3 +194,7 @@ export async function assignPermissionsToRole(roleId: number, permissionIds: num
 
     await db.insert(rolePermissions).values(values).onConflictDoNothing();
 }
+
+
+
+
