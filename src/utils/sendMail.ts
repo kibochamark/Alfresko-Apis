@@ -1,18 +1,21 @@
 import { transporter } from "./NodeMailer";
 
+const sendEmail = async (email: string, token: string) => {
+    const logoUrl = 'https://example.com/path/to/your/logo.png'; // Replace with your logo URL or path
 
-
-const sendEmail = async (email: string,  token: string) => {
     const mailOptions = {
         from: process.env.EMAIL ?? "kibochamark@gmail.com",
-        to:email,
-        subject:"Password Reset Token",
-        html: `<b>Reset token</b> 
-        <p style={{
-            display:"flex",
-            width:20px,
-            flex-wrap:"wrap"
-        }}>${token}</p>`
+        to: email,
+        subject: "Password Reset Token",
+        html: `
+            <div style="font-family: Arial, sans-serif;">
+                <img src="${logoUrl}" alt="Company Logo" style="max-width: 200px; margin-bottom: 20px;">
+                <h3>Password Reset Token</h3>
+                <p>Your password reset token is:</p>
+                <p style="background-color: #f0f0f0; padding: 10px; border-radius: 5px;">${token}</p>
+                <p>Please use this token to reset your password.</p>
+            </div>
+        `
     };
 
     try {
@@ -23,4 +26,4 @@ const sendEmail = async (email: string,  token: string) => {
     }
 };
 
-export default sendEmail
+export default sendEmail;
