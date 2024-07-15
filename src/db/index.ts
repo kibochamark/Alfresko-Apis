@@ -246,8 +246,6 @@ export async function assignPermissionsToRole(roleId: number, permissionIds: num
     const values = permissionIds.map(permissionId => ({
         role_id: roleId,
         permission_id: permissionId,
-        created_at: new Date(),
-        updated_at: new Date()
     }));
 
     await db.insert(rolePermissions).values(values).onConflictDoNothing();
