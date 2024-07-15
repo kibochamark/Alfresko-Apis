@@ -1,7 +1,7 @@
 import { transporter } from "./NodeMailer";
 
 const sendEmail = async (email: string, token: string) => {
-    const logoUrl = 'https://example.com/path/to/your/logo.png'; // Replace with your logo URL or path
+    const logoUrl = 'https://path/logo.png'; // Replace with your logo 
 
     const mailOptions = {
         from: process.env.EMAIL ?? "kibochamark@gmail.com",
