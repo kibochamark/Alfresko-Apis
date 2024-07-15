@@ -30,7 +30,7 @@ export const getUsers = async () => {
     return await db.select({ id: users.id, email: users.email }).from(users);
 }
 export const getUser = async (id: number) => {
-    return await db.select({ id: users.id, email: users.email }).from(users).where(eq(users.id, id));
+    return await db.select({ id: users.id, email: users.email, role:users.role_id }).from(users).where(eq(users.id, id));
 }
 export const getUserByEmail = async (email: string) => {
     return await db.select({ id: users.id, email: users.email }).from(users).where(eq(users.email, email));
@@ -286,8 +286,6 @@ export async function assignPermissionsToRole(roleId: number, permissionIds: num
     const values = permissionIds.map(permissionId => ({
         role_id: roleId,
         permission_id: permissionId,
-        created_at: new Date(),
-        updated_at: new Date()
     }));
 
     await db.insert(rolePermissions).values(values).onConflictDoNothing();

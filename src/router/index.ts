@@ -46,13 +46,13 @@ routes.delete("/deleteProfile", checkTokenBlacklist, authMiddleware, deleteProfi
 routes.get("/getrole", checkTokenBlacklist, authMiddleware, getRole)
 routes.get("/getroles", checkTokenBlacklist, authMiddleware, getRoles)
 routes.delete("/deleterole", checkTokenBlacklist, authMiddleware, deleteRole)
-routes.patch("/updateuser", checkTokenBlacklist, authMiddleware, updateRole)
+routes.patch("/updaterole", checkTokenBlacklist, authMiddleware, updateRole)
 
 routes.post("/createrole", checkTokenBlacklist, authMiddleware, createRole);
 
 // permission
 routes.get("/getpermission", checkTokenBlacklist, authMiddleware, getPermission)
-routes.get("/roles/:roleId/permissions", checkTokenBlacklist, authMiddleware,assignpermissiontorole)
+routes.post("/roles/:roleId/permissions", checkTokenBlacklist, authMiddleware,assignpermissiontorole)
 // routes.get("/getpermissions", checkTokenBlacklist, authMiddleware, getPer)
 routes.delete("/deletepermission", checkTokenBlacklist, authMiddleware, deletePermission)
 routes.patch("/updatepermission", checkTokenBlacklist, authMiddleware, updatePermission)
