@@ -85,7 +85,7 @@ export async function forgotPassword(req: Request, res: Response) {
         await setOtpCode(email, otpCode, otpExpiresAt);
 
         // Send OTP code to user's email
-        await sendEmail(email, `Your OTP code is ${otpCode}`);
+        await sendEmail(email, `Your OTP code is ${otpCode}. This code will expire in 5 minutes.`);
 
         res.status(200).json({ message: `OTP code sent to ${email}` });
 
