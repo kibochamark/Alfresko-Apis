@@ -33,11 +33,11 @@ routes.post("/reset-password", resetpassword)
 
 // profile
 routes.post("/createprofile", checkTokenBlacklist, authMiddleware, createProfileHandler)
-routes.put("/updateProfile", updateProfileHandler)
-routes.get("/getUsersWithProfiles", getUsersWithProfilesHandler)
-routes.get("/getUserWithProfile/:id", getUserWithProfileHandler)
-routes.delete("/deleteUser/:id", deleteUserHandler);
-routes.delete("/deleteProfile", deleteProfileHandler);
+routes.put("/updateProfile", checkTokenBlacklist, authMiddleware, updateProfileHandler)
+routes.get("/getUsersWithProfiles", checkTokenBlacklist, authMiddleware, getUsersWithProfilesHandler)
+routes.get("/getUserWithProfile/:id", checkTokenBlacklist, authMiddleware, getUserWithProfileHandler)
+routes.delete("/deleteUser/:id",checkTokenBlacklist, authMiddleware, deleteUserHandler);
+routes.delete("/deleteProfile", checkTokenBlacklist, authMiddleware, deleteProfileHandler);
 
 // role
 routes.get("/getrole", checkTokenBlacklist, authMiddleware, getRole)
