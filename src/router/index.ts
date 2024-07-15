@@ -49,7 +49,7 @@ routes.post("/createrole", checkTokenBlacklist, authMiddleware, createRole);
 
 // permission
 routes.get("/getpermission", checkTokenBlacklist, authMiddleware, getPermission)
-routes.get("/roles/:roleId/permissions", checkTokenBlacklist, authMiddleware,assignpermissiontorole)
+routes.post("/roles/:roleId/permissions", checkTokenBlacklist, authMiddleware,assignpermissiontorole)
 // routes.get("/getpermissions", checkTokenBlacklist, authMiddleware, getPer)
 routes.delete("/deletepermission", checkTokenBlacklist, authMiddleware, deletePermission)
 routes.patch("/updatepermission", checkTokenBlacklist, authMiddleware, updatePermission)

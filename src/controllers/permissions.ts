@@ -4,10 +4,10 @@ import { assignPermissionsToRole, createpermission, deletepermission, getUser, g
 
 export async function getPermission(req: express.Request, res: express.Response) {
     try {
-        const { id } = req.body
+        const  id = req.query.id as string
         if (!id) {
             return res.status(400).json({
-                error: "Id missing in schema"
+                error: "Id missing in query"
             });
         }
 
