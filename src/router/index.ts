@@ -43,7 +43,7 @@ routes.delete("/deleteProfile", deleteProfileHandler);
 routes.get("/getrole", checkTokenBlacklist, authMiddleware, getRole)
 routes.get("/getroles", checkTokenBlacklist, authMiddleware, getRoles)
 routes.delete("/deleterole", checkTokenBlacklist, authMiddleware, deleteRole)
-routes.patch("/updateuser", checkTokenBlacklist, authMiddleware, updateRole)
+routes.patch("/updaterole", checkTokenBlacklist, authMiddleware, updateRole)
 
 routes.post("/createrole", checkTokenBlacklist, authMiddleware, createRole);
 
