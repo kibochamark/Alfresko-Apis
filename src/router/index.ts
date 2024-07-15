@@ -4,11 +4,12 @@ import { loginUser, logoutUser, refreshToken, registerUser, testlogout } from '.
 import express from 'express';
 import authMiddleware from '../middleware';
 import { validateEmail } from '../middleware/emailValidator';
-import { forgotPassword, resetpassword } from '../controllers/passwordreset';
+// import { forgotPassword, resetpassword } from '../controllers/passwordreset';
 import checkTokenBlacklist from '../middleware/blacklist';
 import { createProfileHandler, updateProfileHandler, deleteProfileHandler, getUsersWithProfilesHandler, getUserWithProfileHandler, deleteUserHandler } from '../controllers/profile';
 import { createRole, deleteRole, getRole, getRoles, updateRole } from '../controllers/roles';
 import { assignpermissiontorole, createPermission, deletePermission, getPermission, updatePermission } from '../controllers/permissions';
+import { forgotPassword, resetPassword } from '../controllers/passwordreset';
 // import { getCategory, postcategory, getCatgeoryById, updatecategory, deletecategoryById } from '../controllers/category';
 // import { upload } from '../utils/upload';
 // import { deletecommentById, getcommentById, getcomments, postcomment, updatecomment } from '../controllers/comment';
@@ -27,9 +28,11 @@ routes.post("/refreshtoken",refreshToken)
 routes.get("/testlogout", checkTokenBlacklist, authMiddleware, testlogout)
 routes.post("/logout",  authMiddleware, logoutUser)
 
-// Reset password
-routes.post("/forgot-password", validateEmail, forgotPassword)
-routes.post("/reset-password", resetpassword)
+// // Reset password
+// routes.post("/forgot-password", validateEmail, forgotPassword)
+// routes.post("/reset-password", resetpassword)
+routes.post("/forgot-password", validateEmail, forgotPassword);
+routes.post("/reset-password", resetPassword);
 
 // profile
 routes.post("/createprofile", checkTokenBlacklist, authMiddleware, createProfileHandler)

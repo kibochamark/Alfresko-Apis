@@ -76,14 +76,14 @@ export const updateUser = async (user: {
 
 // forgot password ---------------------------------------------
 // reset password
-export const updatePassword = async (userId: number, newPassword: string) => {
+// export const updatePassword = async (userId: number, newPassword: string) => {
 
 
-    const { hashedPassword, salt } = await createHash(newPassword)
+//     const { hashedPassword, salt } = await createHash(newPassword)
 
-    return await db.update(users).set({ password: hashedPassword }).where(eq(users.id, userId));
+//     return await db.update(users).set({ password: hashedPassword }).where(eq(users.id, userId));
 
-};
+// };
 
 
 
@@ -205,6 +205,46 @@ export const deleteUser = async (userId: number) => {
 export const deleteRefreshTokensByUserId = async (userId: number) => {
     return await db.delete(refreshTokens).where(eq(refreshTokens.user_id, userId));
 };
+
+//OTP 
+// Function to set the OTP code and expiration time for a user
+
+export const setOtpCode = async (email: string, otpCode: string, expiresAt: Date) => {
+    return await db.update(users)
+        .set({ otp_code: otpCode, otp_expires_at: expiresAt })
+        .where(eq(users.email, email))
+        .returning({
+            id: users.id,
+            email: users.email,
+            otp_code: users.otp_code,
+            otp_expires_at: users.otp_expires_at,
+        });
+};
+
+// Function to verify the OTP code
+export const verifyOtpCode = async (email: string, otpCode: string) => {
+    const [user] = await db.select()
+        .from(users)
+        .where(eq(users.email, email));
+
+    if (!user || user.otp_code !== otpCode || new Date() > user.otp_expires_at) {
+        return null;
+    }
+    return user;
+};
+
+// Function to update the user's password
+export const updatePassword = async (userId: number, newPassword: string) => {
+    const { hashedPassword, salt } = await createHash(newPassword);
+    return await db.update(users)
+        .set({ password: hashedPassword, salt: salt })
+        .where(eq(users.id, userId))
+        .returning({
+            id: users.id,
+            email: users.email,
+        });
+};
+
 
 
 

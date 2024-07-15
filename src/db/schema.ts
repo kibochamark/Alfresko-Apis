@@ -21,6 +21,8 @@ export const users = pgTable("users", {
     email: text('email').notNull().unique(),
     password: varchar('password').notNull(),
     salt: varchar('salt').notNull(),
+    otp_code: varchar('otp_code'), // Add OTP code field
+    otp_expires_at: timestamp('otp_expires_at'),
     created_at: timestamp('created_at').defaultNow(),
     updated_at: timestamp('updated_at').defaultNow().$onUpdate(() => new Date())
 });
@@ -54,6 +56,7 @@ export const refreshTokens = pgTable("refresh_tokens", {
     created_at: timestamp('created_at').defaultNow(),
     updated_at: timestamp("updated_at").defaultNow().$onUpdate(() => new Date())
 });
+
 
 
 // RolePermissions Table
@@ -92,6 +95,8 @@ export const rolePermissionRelations = relations(rolePermissions, ({ one }) => (
         references: [permissions.id]
     })
 }));
+
+
 
 
 // export const posts = pgTable("posts", {

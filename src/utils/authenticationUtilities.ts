@@ -64,6 +64,11 @@ export const verifyResetToken = (token: string): { userId: number } | null => {
     }
 };
 
+//GENERATE OTP
+export function generateOtpCode() {
+    return Math.floor(100000 + Math.random() * 900000).toString(); // Generate a 6-digit OTP code
+}
+
 
 
 export const getPayloadFromToken = (authHeader: string): JwtPayload | null => {
