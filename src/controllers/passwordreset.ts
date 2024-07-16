@@ -102,6 +102,7 @@ export async function resetPassword(req: Request, res: Response) {
     try {
         // Verify OTP code
         const user = await verifyOtpCode(email, otpCode);
+        
         if (!user) {
             return res.status(400).json({ message: 'Invalid or expired OTP code' });
         }

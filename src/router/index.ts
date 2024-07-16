@@ -1,6 +1,6 @@
 // import { deleteblog, files, getBlogByCategory, getBlogById, getBlogByUser, getBlogs, newPost, updateblog } from '../controllers/posts';
 // import { getuserByKinde, getuserBymail, getusers, newUser, putUser, removeUser } from '../controllers/auth';
-import { loginUser, logoutUser, refreshToken, registerUser, testlogout } from '../controllers/auth';
+import { googlecallback, loginUser, logoutUser, refreshToken, registerUser, testlogout } from '../controllers/auth';
 import express from 'express';
 import authMiddleware from '../middleware';
 import { validateEmail } from '../middleware/emailValidator';
@@ -10,6 +10,7 @@ import { createProfileHandler, updateProfileHandler, deleteProfileHandler, getUs
 import { createRole, deleteRole, getRole, getRoles, updateRole } from '../controllers/roles';
 import { assignpermissiontorole, createPermission, deletePermission, getPermission, updatePermission } from '../controllers/permissions';
 import { forgotPassword, resetPassword } from '../controllers/passwordreset';
+import passport from 'passport';
 // import { getCategory, postcategory, getCatgeoryById, updatecategory, deletecategoryById } from '../controllers/category';
 // import { upload } from '../utils/upload';
 // import { deletecommentById, getcommentById, getcomments, postcomment, updatecomment } from '../controllers/comment';
@@ -27,6 +28,11 @@ routes.post("/loginuser",validateEmail,loginUser)
 routes.post("/refreshtoken",refreshToken)
 routes.get("/testlogout", checkTokenBlacklist, authMiddleware, testlogout)
 routes.post("/logout",  authMiddleware, logoutUser)
+
+// google logins
+routes.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+routes.get('/auth/google/callback', googlecallback);
+
 
 // // Reset password
 // routes.post("/forgot-password", validateEmail, forgotPassword)

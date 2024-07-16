@@ -85,6 +85,31 @@ export const refreshToken = async (req: express.Request, response: express.Respo
         response.status(403).json({ message: err.message }).end();
     }
 }
+
+
+export const googlecallback = async (req: express.Request, response: express.Response, next: express.NextFunction) => {
+    try {
+       
+        passport.authenticate('google', { failureRedirect: '/' }, async (err: any, user: any, info: any) => {
+            console.log(err, user, "usr")
+            if (err) return next(err);
+            if (!user) return response.status(401).json({ message: info.message }).end();
+            
+            
+            
+            const { accessToken, refreshToken } = generateTokens(user);
+            await insertRefreshToken(refreshToken, user.id)
+    
+            response.json({ accessToken, refreshToken });
+        })(req, response, next)
+    } catch {
+        response.status(400).json({
+            message: "Something went wrong, Contact administrator"
+        }).end()
+    }
+    
+    
+}
 // Google OAuth Routes
 // app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
