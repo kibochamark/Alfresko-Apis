@@ -1,6 +1,6 @@
 // import { deleteblog, files, getBlogByCategory, getBlogById, getBlogByUser, getBlogs, newPost, updateblog } from '../controllers/posts';
 // import { getuserByKinde, getuserBymail, getusers, newUser, putUser, removeUser } from '../controllers/auth';
-import { googlecallback, loginUser, logoutUser, refreshToken, registerUser, testlogout } from '../controllers/auth';
+import { googlecallback, loginUser, logoutUser, refreshToken, registerCompany, registerUser, testlogout } from '../controllers/auth';
 import express from 'express';
 import authMiddleware from '../middleware';
 import { validateEmail } from '../middleware/emailValidator';
@@ -24,6 +24,7 @@ const routes = express.Router();
 
 // routes.get("/getusers", authenticateJWT, getusers)
 routes.post("/registeruser",validateEmail, registerUser)
+routes.post("/registercompany",validateEmail, registerCompany)
 routes.post("/loginuser",validateEmail,loginUser)
 routes.post("/refreshtoken",refreshToken)
 routes.get("/testlogout", checkTokenBlacklist, authMiddleware, testlogout)

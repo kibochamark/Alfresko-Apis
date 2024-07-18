@@ -1,5 +1,5 @@
 
-import { integer, pgTable, primaryKey, serial, text, timestamp, varchar } from "drizzle-orm/pg-core";
+import { integer, pgEnum, pgTable, primaryKey, serial, text, timestamp, varchar } from "drizzle-orm/pg-core";
 import { InferModel, SQL, relations } from "drizzle-orm";
 
 // Roles Table
@@ -18,6 +18,7 @@ export const users = pgTable("users", {
     id: serial('id').primaryKey(),
     role_id: integer('role_id').references(() => roles.id).notNull(),
     profile_id: integer('profile_id').references(() => profiles.id).unique(),
+    company_id: integer('company_id').references(() => company.id).unique().default(null),
     email: text('email').notNull().unique(),
     password: varchar('password').notNull(),
     salt: varchar('salt').notNull(),
@@ -28,16 +29,37 @@ export const users = pgTable("users", {
 });
 
 
+export const profileTypeEnum = pgEnum('profiletype', ['individual', 'company', 'admin'])
+
+
 // Profiles Table
 export const profiles = pgTable("profiles", {
     id: serial('id').primaryKey(),
-    user_type: text('user_type').notNull(),
+    user_type: profileTypeEnum('profiletype'),
     name: text('name').notNull(),
     phone: varchar('phone'),
     address: text('address'),
     created_at: timestamp('created_at').defaultNow(),
     updated_at: timestamp("updated_at").defaultNow().$onUpdate(() => new Date())
 });
+
+
+export const subscriptionEnum = pgEnum('subscriptions_status', ['active', 'inactive']);
+
+
+// companies
+export const company  = pgTable("companies", {
+    id:serial('id').primaryKey(),
+    company_name:text("company_name").notNull(),
+    street_address:text("address1").notNull(),
+    street_address2:text("address2"),
+    location:text("location").notNull(),
+    phone:text("company-telephone").notNull(),
+    email:text("email").notNull(),
+    created_at: timestamp('created_at').defaultNow(),
+    updated_at: timestamp("updated_at").defaultNow().$onUpdate(() => new Date())
+})
+
 
 // Permissions Table
 export const permissions = pgTable("permissions", {
@@ -47,6 +69,8 @@ export const permissions = pgTable("permissions", {
     created_at: timestamp('created_at').defaultNow(),
     updated_at: timestamp("updated_at").defaultNow().$onUpdate(() => new Date())
 });
+
+
 
 // RefreshTokens Table
 export const refreshTokens = pgTable("refresh_tokens", {
@@ -69,9 +93,12 @@ export const rolePermissions = pgTable("role_permissions", {
     pk: primaryKey(table.role_id, table.permission_id)
 }));
 
+
+
 // Relations
 export const userRelations = relations(users, ({ one, many }) => ({
     profile: one(profiles),
+    company:one(company),
     role: one(roles),
     refreshTokens: many(refreshTokens)
 }));
@@ -191,10 +218,5 @@ export type RolePermission = InferModel<typeof rolePermissions>;
 
 export type RefreshToken = InferModel<typeof refreshTokens>;
 
-// export type Post = InferModel<typeof posts>;
-// export type Comment = InferModel<typeof comments>;
-// export type Category = InferModel<typeof category, 'insert'>;
-// export type NewComment = InferModel<typeof comments, 'insert'>;
-// export type NewPost = InferModel<typeof posts, 'insert'>;
-// export type NewUser = InferModel<typeof users, 'insert'>;
-// export type Postcategorytable = InferModel<typeof postsToCategories, 'insert'>;
+export type ProfileType = NoInfer<typeof profileTypeEnum>;
+

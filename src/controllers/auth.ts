@@ -7,6 +7,8 @@ import { createHash } from '../utils/HasherPassword';
 import { Request } from 'express';
 import { blacklistToken } from '../utils/tokenblacklist';
 import { JwtPayload } from 'jsonwebtoken';
+import db from 'utils/connection';
+import { createCompanywithUser } from '../db/index';
 
 
 // controller to handle user login
@@ -16,6 +18,8 @@ export async function loginUser(req: express.Request, response: express.Response
             if (err) return next(err);
             if (!user) return response.status(401).json({ message: info.message }).end();
             
+
+        
             
             const { accessToken, refreshToken } = generateTokens(user[0]);
             await insertRefreshToken(refreshToken, user[0].id)
@@ -58,6 +62,42 @@ export async function registerUser(req: express.Request, response: express.Respo
         response.status(500).json({ error: err?.message }).end();
     }
 }
+
+
+export async function registerCompany(req: express.Request, res: express.Response, next: express.NextFunction) {
+    const { email, password, companyName, companyAddress, companyPhone, 
+        companyEmail,location } = req.body;
+    
+
+    if (!email || !password || !companyName || !companyAddress || !companyPhone || !location || !companyEmail) {
+        return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    const { hashedPassword, salt } = await createHash(password);
+
+    try {
+        const user = await createCompanywithUser({
+            salt:salt,
+            role:2,
+            companyName:companyName,
+            companyAddress:companyAddress,
+            companyPhone:companyPhone,
+            companyEmail:companyEmail,
+            email:email,
+            location:location,
+            hashedPassword:hashedPassword
+        })
+
+        if(!user) return res.status(400).json({
+            error:"failed to create company "
+        }).end()
+
+        return res.status(201).json(user).end()
+    } catch (err) {
+        res.status(500).json({ error: err.message }).end();
+    }
+}
+
 
 export const refreshToken = async (req: express.Request, response: express.Response, next: express.NextFunction) => {
     const { apprefreshToken } = req.body;
