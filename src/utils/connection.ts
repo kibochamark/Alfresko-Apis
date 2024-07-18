@@ -1,10 +1,10 @@
-// import { Pool } from "pg";
-import { drizzle } from 'drizzle-orm/neon-http';
+import { Pool } from "pg";
+// import { drizzle } from 'drizzle-orm/neon-http';
 // import { Pool } from '@neondatabase/serverless';
 
 // import { drizzle } from 'drizzle-orm/neon-serverless';
 import { neon } from '@neondatabase/serverless';
-// import { drizzle } from "drizzle-orm/node-postgres";
+import { drizzle } from "drizzle-orm/node-postgres";
 
 import * as schema from "../db/schema"
 
@@ -24,16 +24,16 @@ import * as schema from "../db/schema"
 // const db = drizzle(sql, {schema:schema});
 
 
-const sql= neon("postgresql://neondb_owner:30WYKdxVMhnQ@ep-rapid-snow-a26ly6wq-pooler.eu-central-1.aws.neon.tech/neondb?sslmode=require")
-const db = drizzle(sql, {schema:schema});
+// const sql= neon("postgresql://neondb_owner:30WYKdxVMhnQ@ep-rapid-snow-a26ly6wq-pooler.eu-central-1.aws.neon.tech/neondb?sslmode=require")
+// const db = drizzle(sql, {schema:schema});
 
 // const db = drizzle(pool)
 
 // import { Pool } from "pg";
 
-// const pool = new Pool({
-//   connectionString: "postgresql://neondb_owner:30WYKdxVMhnQ@ep-rapid-snow-a26ly6wq-pooler.eu-central-1.aws.neon.tech/neondb?sslmode=require",
-// });
+const pool = new Pool({
+  connectionString: "postgresql://neondb_owner:30WYKdxVMhnQ@ep-rapid-snow-a26ly6wq-pooler.eu-central-1.aws.neon.tech/neondb?sslmode=require",
+});
 
 // or
 // const pool = new Pool({
@@ -44,7 +44,7 @@ const db = drizzle(sql, {schema:schema});
 //   database: "Configurator",
 // });
 
-// const db = drizzle(pool);
+const db = drizzle(pool);
 
 
 
