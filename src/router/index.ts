@@ -11,6 +11,7 @@ import { createRole, deleteRole, getRole, getRoles, updateRole } from '../contro
 import { assignpermissiontorole, createPermission, deletePermission, getPermission, updatePermission } from '../controllers/permissions';
 import { forgotPassword, resetPassword } from '../controllers/passwordreset';
 import passport from 'passport';
+import { newcategory, removecategory, retrievecategories, retrievecategory, updatecategory } from '../controllers/category';
 // import { getCategory, postcategory, getCatgeoryById, updatecategory, deletecategoryById } from '../controllers/category';
 // import { upload } from '../utils/upload';
 // import { deletecommentById, getcommentById, getcomments, postcomment, updatecomment } from '../controllers/comment';
@@ -66,6 +67,12 @@ routes.patch("/updatepermission", checkTokenBlacklist, authMiddleware, updatePer
 routes.post("/createpermission", checkTokenBlacklist, authMiddleware, createPermission);
 
 
+// // category
+routes.get("/getcategories", checkTokenBlacklist, authMiddleware, retrievecategories)
+routes.get("/getcategory", checkTokenBlacklist, authMiddleware, retrievecategory)
+routes.post("/createcategory", checkTokenBlacklist, authMiddleware,newcategory)
+routes.delete("/deletecategory", checkTokenBlacklist, authMiddleware, removecategory)
+routes.patch("/updatecategory", checkTokenBlacklist, authMiddleware, updatecategory)
 
 // routes.delete("/deleteuser", authenticateJWT, removeUser)
 
@@ -81,7 +88,6 @@ routes.post("/createpermission", checkTokenBlacklist, authMiddleware, createPerm
 // routes.get("/getBlogByuser", authenticateJWT, getBlogByUser)
 
 
-// // category
 
 
 // routes.post("/postcategory", authenticateJWT, postcategory)

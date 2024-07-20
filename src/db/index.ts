@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import db from "../utils/connection"
-import { InsertPermission, InsertRole, User, permissions, profiles, refreshTokens, rolePermissions, roles, users, company, profileTypeEnum, ProfileType } from './schema';
+import { InsertPermission, InsertRole, User, permissions, profiles, refreshTokens, rolePermissions, roles, users, company, profileTypeEnum, ProfileType, categories, InsertCategory } from './schema';
 import { hashPassword } from '../utils/authenticationUtilities';
 import { createHash } from "../utils/HasherPassword";
 import { and, gte } from "drizzle-orm";
@@ -82,7 +82,7 @@ export const checkActiveSubscription = async (companyId: number) => {
             )
         )
         .limit(1);
-        
+
     return activeSubscription.length > 0 ? activeSubscription[0] : null;
 };
 
@@ -173,7 +173,7 @@ export const createCompanywithUser = async ({
     companyAddress: string;
     companyPhone: string;
     companyEmail: string;
-    location:string;
+    location: string;
     email: string;
     hashedPassword: string;
 }) => {
@@ -227,7 +227,7 @@ export const createCompanywithUser = async ({
 
 
 // profile -----------------------------------------------
-export const createProfile = async (userType:"individual" | "company" | "admin" , name: string, phone: string, address: string) => {
+export const createProfile = async (userType: "individual" | "company" | "admin", name: string, phone: string, address: string) => {
     return await db.insert(profiles).values({
         user_type: userType,
         name: name,
@@ -432,3 +432,36 @@ export async function assignPermissionsToRole(roleId: number, permissionIds: num
 
 
 
+// categories function
+
+export const getCategories = async () => {
+    return await db.select({ id: categories.id, name: categories.name, description: categories.description, created_at: categories.created_at }).from(categories)
+}
+
+export const getCategoryById = async (id:number) => {
+    return await db.select({ id: categories.id, name: categories.name, description: categories.description, created_at: categories.created_at }).from(categories).where(eq(categories.id, id))
+}
+
+
+
+export const createcategory = async (category: InsertCategory) => {
+
+    return await db.insert(categories).values(category).returning({
+        id: categories.id, name: categories.name, description: categories.description, created_at: categories.created_at
+    })
+
+}
+
+
+export const updateCategory = async (category: InsertCategory, id:number)=>{
+
+    return await db.update(categories).set(category).where(eq(categories.id, id)).returning({
+        id:categories.id, name:categories.name, description:categories.description, updated_at:categories.updated_at
+    })
+
+}
+
+
+export const deleteCategory = async (id:number)=>{
+    return await db.delete(categories).where(eq(categories.id, id))
+}

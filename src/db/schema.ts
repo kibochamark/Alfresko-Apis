@@ -388,6 +388,10 @@ export type User = InferModel<typeof users> & { company_id?: number };
 export type Role = InferModel<typeof roles, 'select'>;
 export type InsertRole = InferModel<typeof roles, 'insert'>;
 
+// categories
+export type Category = InferModel<typeof categories, 'select'>;
+export type InsertCategory = InferModel<typeof categories, 'insert'>;
+
 // Define Profile type
 export type Profile = InferModel<typeof profiles>;
 
