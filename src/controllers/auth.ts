@@ -2,7 +2,7 @@ import express from 'express';
 import passport from 'passport';
 import { generateTokens, verifyAccessToken, verifyRefreshToken } from '../utils/authenticationUtilities';
 import { refreshTokens } from '../db/schema';
-import { createUser, deleteRefreshToken, getUser, insertRefreshToken } from '../db';
+import { checkActiveSubscription, createUser, deleteRefreshToken, getUser, insertRefreshToken } from '../db';
 import { createHash } from '../utils/HasherPassword';
 import { Request } from 'express';
 import { blacklistToken } from '../utils/tokenblacklist';
@@ -17,6 +17,12 @@ export async function loginUser(req: express.Request, response: express.Response
         passport.authenticate('local', async (err: any, user: any, info: any) => {
             if (err) return next(err);
             if (!user) return response.status(401).json({ message: info.message }).end();
+            console.log(user)
+            if (user.company_id){
+            const activeSubscription = await checkActiveSubscription(user.company_id);
+            if (!activeSubscription) {
+            return response.status(403).json({ message: 'Company does not have an active subscription' });
+            }}
             
 
         

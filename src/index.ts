@@ -13,7 +13,7 @@ import { Strategy as LocalStrategy } from 'passport-local';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import db from './utils/connection'
 import { checkPassword } from './utils/HasherPassword';
-import { users } from './db/schema';
+import { company, users } from './db/schema';
 import { eq } from 'drizzle-orm';
 import { getUser } from "./db"
 import { googlecallback } from "./controllers/auth"
@@ -49,7 +49,7 @@ passport.use(new LocalStrategy({ usernameField: 'email', passwordField: 'passwor
     console.log(email)
     try {
         console.log(email)
-        const user = await db.select({ password: users.password, id: users.id, email: users.email }).from(users).where(eq(users.email, email));
+        const user = await db.select({ password: users.password, id: users.id, email: users.email , company_id: users.company_id }).from(users).where(eq(users.email, email));
         console.log(user)
         if (!user[0]?.email) return done(null, false, { message: 'Incorrect email.' });
 

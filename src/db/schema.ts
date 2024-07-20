@@ -59,6 +59,29 @@ export const company  = pgTable("companies", {
     created_at: timestamp('created_at').defaultNow(),
     updated_at: timestamp("updated_at").defaultNow().$onUpdate(() => new Date())
 })
+// Subscription Plans Table
+export const subscriptionPlans = pgTable("subscription_plans", {
+    id: serial('id').primaryKey(),
+    name: text('name').notNull(),
+    description: text('description'),
+    price: integer('price').notNull(),
+    discount: integer('discount').default(0), // Discount field
+    duration: integer('duration').notNull(), 
+    created_at: timestamp('created_at').defaultNow(),
+    updated_at: timestamp("updated_at").defaultNow().$onUpdate(() => new Date())
+});
+// Subscriptions Table
+
+export const subscriptions = pgTable("subscriptions", {
+    id: serial('id').primaryKey(),
+    company_id: integer('company_id').references(() => company.id).notNull(),
+    plan_id: integer('plan_id').references(() => subscriptionPlans.id).notNull(),
+    status: subscriptionEnum('status').default('inactive').notNull(),
+    start_date: timestamp('start_date').notNull(),
+    end_date: timestamp('end_date').notNull(), // Subscription end date
+    created_at: timestamp('created_at').defaultNow(),
+    updated_at: timestamp("updated_at").defaultNow().$onUpdate(() => new Date())
+});
 
 
 // Permissions Table
@@ -69,9 +92,6 @@ export const permissions = pgTable("permissions", {
     created_at: timestamp('created_at').defaultNow(),
     updated_at: timestamp("updated_at").defaultNow().$onUpdate(() => new Date())
 });
-
-
-
 // RefreshTokens Table
 export const refreshTokens = pgTable("refresh_tokens", {
     id: serial('id').primaryKey(),
@@ -80,9 +100,6 @@ export const refreshTokens = pgTable("refresh_tokens", {
     created_at: timestamp('created_at').defaultNow(),
     updated_at: timestamp("updated_at").defaultNow().$onUpdate(() => new Date())
 });
-
-
-
 // RolePermissions Table
 export const rolePermissions = pgTable("role_permissions", {
     role_id: integer('role_id').references(() => roles.id).notNull(),
@@ -123,7 +140,42 @@ export const rolePermissionRelations = relations(rolePermissions, ({ one }) => (
     })
 }));
 
+// Relations
+export const companyRelations = relations(company, ({ many }) => ({
+    users: many(users),
+    subscriptions: many(subscriptions)
+}));
 
+export const subscriptionRelations = relations(subscriptions, ({ one }) => ({
+    company: one(company, {
+        fields: [subscriptions.company_id],
+        references: [company.id]
+    }),
+    plan: one(subscriptionPlans, {
+        fields: [subscriptions.plan_id],
+        references: [subscriptionPlans.id]
+    })
+}));
+
+export const subscriptionPlanRelations = relations(subscriptionPlans, ({ many }) => ({
+    subscriptions: many(subscriptions)
+}));
+
+// Relations
+// export const subscriptionRelations = relations(subscriptions, ({ one }) => ({
+//     company: one(company),
+//     plan: one(subscriptionPlans)
+// }));
+
+export const planRelations = relations(subscriptionPlans, ({ many }) => ({
+    subscriptions: many(subscriptions)
+}));
+
+// Define types
+export type SubscriptionPlan = InferModel<typeof subscriptionPlans>;
+export type InsertSubscriptionPlan = InferModel<typeof subscriptionPlans, 'insert'>;
+export type Subscription = InferModel<typeof subscriptions>;
+export type InsertSubscription = InferModel<typeof subscriptions, 'insert'>;
 
 
 // export const posts = pgTable("posts", {
@@ -201,7 +253,8 @@ export const rolePermissionRelations = relations(rolePermissions, ({ one }) => (
 //   }),
 // }));
 
-export type User = InferModel<typeof users>;
+// export type User = InferModel<typeof users>;
+export type User = InferModel<typeof users> & { company_id?: number };
 // Define Role type
 export type Role = InferModel<typeof roles, 'select'>;
 export type InsertRole = InferModel<typeof roles, 'insert'>;
