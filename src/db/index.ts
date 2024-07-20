@@ -465,3 +465,6 @@ export const updateCategory = async (category: InsertCategory, id:number)=>{
 export const deleteCategory = async (id:number)=>{
     return await db.delete(categories).where(eq(categories.id, id))
 }
+
+
+// product options
