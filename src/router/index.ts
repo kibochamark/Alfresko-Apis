@@ -12,6 +12,7 @@ import { newcategory, removecategory, retrievecategories, retrievecategory, upda
 import checkActiveSubscriptionMiddleware from '../middleware/checksubscription';
 import { newconfigoption, removeoption, retrieveconfigoptions, retrieveoption, updateoption } from '../controllers/configoptions';
 import { createConfigValueHandler, deleteConfigValueHandler, getConfigValueByIdHandler,  getConfigValuesHandler, updateConfigValueHandler } from '../controllers/optionvalues';
+import { addProductImage, createProduct, deleteProductById, getAllProducts, getProductById, updateProductById } from '../controllers/product';
 
 
 
@@ -88,6 +89,14 @@ routes.get("/getconfigoptionvaluebyid", checkTokenBlacklist, authMiddleware, get
 routes.post("/createconfigoptionvalue", checkTokenBlacklist, authMiddleware,createConfigValueHandler )
 routes.delete("/deleteconfigoptionvalue", checkTokenBlacklist, authMiddleware, deleteConfigValueHandler)
 routes.patch("/updateconfigoptionvalue", checkTokenBlacklist, authMiddleware, updateConfigValueHandler)
+
+
+routes.post('/products', checkTokenBlacklist, authMiddleware, createProduct);
+routes.get('/products',  checkTokenBlacklist, authMiddleware, getAllProducts);
+routes.get('/products/:id', checkTokenBlacklist, authMiddleware, getProductById);
+routes.put('/products/:id', checkTokenBlacklist, authMiddleware, updateProductById);
+routes.delete('/products/:id', checkTokenBlacklist, authMiddleware, deleteProductById);
+routes.post('/products/:id/images', checkTokenBlacklist, authMiddleware, addProductImage);
 
 
 
