@@ -43,8 +43,8 @@ routes.post("/forgot-password", validateEmail, forgotPassword);
 routes.post("/reset-password", resetPassword);
 
 // profile
-// routes.post("/createprofile", checkTokenBlacklist, authMiddleware, createProfileHandler)
-routes.post("/createprofile", checkTokenBlacklist, authMiddleware, checkActiveSubscriptionMiddleware, createProfileHandler)
+routes.post("/createprofile", checkTokenBlacklist, authMiddleware, createProfileHandler)
+// routes.post("/createprofile", checkTokenBlacklist, authMiddleware, checkActiveSubscriptionMiddleware, createProfileHandler)
 routes.put("/updateProfile", checkTokenBlacklist, authMiddleware, updateProfileHandler)
 routes.get("/getUsersWithProfiles", checkTokenBlacklist, authMiddleware, getUsersWithProfilesHandler)
 routes.get("/getUserWithProfile/:id", checkTokenBlacklist, authMiddleware, getUserWithProfileHandler)
