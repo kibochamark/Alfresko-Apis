@@ -6,13 +6,12 @@ import { User, refreshTokens } from '../db/schema';
 const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret';
 const REFRESH_SECRET = process.env.REFRESH_SECRET || 'your_refresh_secret';
 
-export const generateTokens = (user: { email: string; id: number;}) => {
-    console.log(user, "user")
-    const accessToken = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, {
+export const generateTokens = (user: { email: string; id: number; company_id?: number }) => {
+    const accessToken = jwt.sign({ id: user.id, email: user.email, company_id: user.company_id }, JWT_SECRET, {
         expiresIn: '1h'
     });
 
-    const refreshToken = jwt.sign({ id: user.id, email: user.email }, REFRESH_SECRET, {
+    const refreshToken = jwt.sign({ id: user.id, email: user.email, company_id: user.company_id }, REFRESH_SECRET, {
         expiresIn: '7d'
     });
 
