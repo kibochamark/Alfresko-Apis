@@ -1,10 +1,7 @@
-// import { deleteblog, files, getBlogByCategory, getBlogById, getBlogByUser, getBlogs, newPost, updateblog } from '../controllers/posts';
-// import { getuserByKinde, getuserBymail, getusers, newUser, putUser, removeUser } from '../controllers/auth';
 import { googlecallback, loginUser, logoutUser, refreshToken, registerCompany, registerUser, testlogout } from '../controllers/auth';
 import express from 'express';
 import authMiddleware from '../middleware';
 import { validateEmail } from '../middleware/emailValidator';
-// import { forgotPassword, resetpassword } from '../controllers/passwordreset';
 import checkTokenBlacklist from '../middleware/blacklist';
 import { createProfileHandler, updateProfileHandler, deleteProfileHandler, getUsersWithProfilesHandler, getUserWithProfileHandler, deleteUserHandler } from '../controllers/profile';
 import { createRole, deleteRole, getRole, getRoles, updateRole } from '../controllers/roles';
@@ -13,10 +10,9 @@ import { forgotPassword, resetPassword } from '../controllers/passwordreset';
 import passport from 'passport';
 import { newcategory, removecategory, retrievecategories, retrievecategory, updatecategory } from '../controllers/category';
 import checkActiveSubscriptionMiddleware from '../middleware/checksubscription';
-// import { getCategory, postcategory, getCatgeoryById, updatecategory, deletecategoryById } from '../controllers/category';
-// import { upload } from '../utils/upload';
-// import { deletecommentById, getcommentById, getcomments, postcomment, updatecomment } from '../controllers/comment';
-// import authenticateJWT from '../middleware';
+import { newconfigoption, removeoption, retrieveconfigoptions, retrieveoption, updateoption } from '../controllers/configoptions';
+import { createConfigValueHandler, deleteConfigValueHandler, getConfigValueByIdHandler,  getConfigValuesHandler, updateConfigValueHandler } from '../controllers/optionvalues';
+
 
 
 const routes = express.Router();
@@ -38,8 +34,7 @@ routes.get('/auth/google/callback', googlecallback);
 
 
 // // Reset password
-// routes.post("/forgot-password", validateEmail, forgotPassword)
-// routes.post("/reset-password", resetpassword)
+
 routes.post("/forgot-password", validateEmail, forgotPassword);
 routes.post("/reset-password", resetPassword);
 
@@ -77,34 +72,23 @@ routes.post("/createcategory", checkTokenBlacklist, authMiddleware,newcategory)
 routes.delete("/deletecategory", checkTokenBlacklist, authMiddleware, removecategory)
 routes.patch("/updatecategory", checkTokenBlacklist, authMiddleware, updatecategory)
 
-// routes.delete("/deleteuser", authenticateJWT, removeUser)
+
+// config options
+routes.get("/getconfigoptions", checkTokenBlacklist, authMiddleware, retrieveconfigoptions)
+routes.get("/getconfigoptionbyproduct", checkTokenBlacklist, authMiddleware, retrieveoption)
+routes.post("/createconfigoption", checkTokenBlacklist, authMiddleware,newconfigoption)
+routes.delete("/deleteconfigoption", checkTokenBlacklist, authMiddleware, removeoption)
+routes.patch("/updateconfigoption", checkTokenBlacklist, authMiddleware, updateoption)
 
 
-// // blogs
+//config option values
 
-// routes.post("/createblog", authenticateJWT, upload.single('image'), newPost)
-// routes.patch("/updateblog", authenticateJWT, updateblog)
-// routes.get("/getblogs", authenticateJWT, getBlogs)
-// routes.get("/getblog", authenticateJWT, getBlogById)
-// routes.get("/getblogbycat", authenticateJWT, getBlogByCategory)
-// routes.delete("/deleteblog", authenticateJWT, deleteblog)
-// routes.get("/getBlogByuser", authenticateJWT, getBlogByUser)
+routes.get("/getconfigoptionvalues", checkTokenBlacklist, authMiddleware, getConfigValuesHandler)
+routes.get("/getconfigoptionvaluebyid", checkTokenBlacklist, authMiddleware, getConfigValueByIdHandler)
+routes.post("/createconfigoptionvalue", checkTokenBlacklist, authMiddleware,createConfigValueHandler )
+routes.delete("/deleteconfigoptionvalue", checkTokenBlacklist, authMiddleware, deleteConfigValueHandler)
+routes.patch("/updateconfigoptionvalue", checkTokenBlacklist, authMiddleware, updateConfigValueHandler)
 
-
-
-
-// routes.post("/postcategory", authenticateJWT, postcategory)
-// routes.get("/retrievecategories", authenticateJWT, getCategory)
-// routes.patch("/updatecategory", authenticateJWT, updatecategory)
-// routes.get("/retrievecategory", authenticateJWT, getCatgeoryById)
-// routes.delete("/deletecategory", authenticateJWT, deletecategoryById)
-
-// // comments
-// routes.post("/postcomment", authenticateJWT, postcomment)
-// routes.get("/retrievecomments", authenticateJWT, getcomments)
-// routes.patch("/updatecomment", authenticateJWT, updatecomment)
-// routes.get("/retrievecomment", authenticateJWT, getcommentById)
-// routes.delete("/deletecomment", authenticateJWT, deletecommentById)
 
 
 export default routes;

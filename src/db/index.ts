@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import db from "../utils/connection"
-import { InsertPermission, InsertRole, User, permissions, profiles, refreshTokens, rolePermissions, roles, users, company, profileTypeEnum, ProfileType, categories, InsertCategory } from './schema';
+import { InsertPermission, InsertRole, User, permissions, profiles, refreshTokens, rolePermissions, roles, users, company, profileTypeEnum, ProfileType, categories, InsertCategory, InsertConfigureOption, configurationOptions, configurationValues, InsertConfigureOptionValue } from './schema';
 import { hashPassword } from '../utils/authenticationUtilities';
 import { createHash } from "../utils/HasherPassword";
 import { and, gte } from "drizzle-orm";
@@ -467,4 +467,128 @@ export const deleteCategory = async (id:number)=>{
 }
 
 
-// product options
+
+// configure option functions
+
+
+export const createconfigoption = async(option:InsertConfigureOption)=>{
+    return await db.insert(configurationOptions).values(option).returning({
+        id:configurationOptions.id,
+        name:configurationOptions.option_name,
+        product_id:configurationOptions.product_id,
+        created_at:configurationOptions.created_at
+    })
+}
+
+
+
+export const updateconfigoption = async(option:{
+    option_name:string
+}, id:number)=>{
+    return await db.update(configurationOptions).set(option).returning({
+        id:configurationOptions.id,
+        name:configurationOptions.option_name,
+        product_id:configurationOptions.product_id,
+        updated_at:configurationOptions.updated_at
+    }).where(eq(configurationOptions.id, id))
+}
+
+
+
+export const getconfigoptions = async()=>{
+    return await db.select({
+        id:configurationOptions.id,
+        name:configurationOptions.option_name,
+        product_id:configurationOptions.product_id,
+        updated_at:configurationOptions.updated_at
+    }).from(configurationOptions)
+}
+
+
+export const getconfigoptionbyid = async(id:number)=>{
+    return await db.select({
+        id:configurationOptions.id,
+        name:configurationOptions.option_name,
+        product_id:configurationOptions.product_id,
+        updated_at:configurationOptions.updated_at
+    }).from(configurationOptions).where(eq(configurationOptions.id, id))
+}
+
+export const getconfigoptionbyproductid = async(id:number)=>{
+    return await db.select({
+        id:configurationOptions.id,
+        name:configurationOptions.option_name,
+        product_id:configurationOptions.product_id,
+        updated_at:configurationOptions.updated_at
+    }).from(configurationOptions).where(eq(configurationOptions.product_id, id))
+}
+
+export const deleteConfigOption = async (id:number)=>{
+    return await db.delete(configurationOptions).where(eq(configurationOptions.id, id))
+}
+
+
+export const getConfigoptionswithvalues = async()=>{
+    return await db.query.configurationOptions.findMany({
+        with:{
+            configuration_values:true
+        }
+    })
+}
+export const getConfigoptionswithvaluesbyid = async(id:number)=>{
+    return await db.query.configurationOptions.findMany({
+        where:(configurationOptions, { eq }) => eq(configurationOptions.id, id),
+        with:{
+            configuration_values:true
+        }
+    })
+}
+export const getConfigoptionswithvaluesbyproductid = async(id:number)=>{
+    return await db.query.configurationOptions.findMany({
+        where:(configurationOptions, { eq }) => eq(configurationOptions.product_id, id),
+        with:{
+            configuration_values:true
+        }
+    })
+}
+
+
+
+//config values
+export const createConfigValue = async (optionvalues:InsertConfigureOptionValue) => {
+    return await db.insert(configurationValues).values(optionvalues);
+};
+
+
+export const getConfigValues = async () => {
+    return await db.select({
+        id: configurationValues.id,
+        option_id: configurationValues.option_id,
+        value_name: configurationValues.value_name,
+        price_adjustment: configurationValues.price_adjustment,
+        created_at: configurationValues.created_at,
+        updated_at: configurationValues.updated_at,
+    }).from(configurationValues);
+};
+
+
+export const getConfigValueById = async (id:number) => {
+    return await db.select({
+        id: configurationValues.id,
+        option_id: configurationValues.option_id,
+        value_name: configurationValues.value_name,
+        price_adjustment: configurationValues.price_adjustment,
+        created_at: configurationValues.created_at,
+        updated_at: configurationValues.updated_at,
+    }).from(configurationValues).where(eq(configurationValues.id, id));
+};
+
+
+export const updateConfigValue = async (id:number, updatedValues:InsertConfigureOptionValue) => {
+    return await db.update(configurationValues).set(updatedValues).where(eq(configurationValues.id,id));
+};
+
+
+export const deleteConfigValue = async (id:number) => {
+    return await db.delete(configurationValues).where(eq(configurationValues.id,id));
+};

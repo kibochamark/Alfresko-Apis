@@ -148,8 +148,8 @@ export const categories = pgTable("categories", {
 // Configuration Options Table
 export const configurationOptions = pgTable("configuration_options", {
     id: serial('id').primaryKey(),
-    product_id: integer('product_id').references(() => products.id).notNull(),
-    option_name: text('option_name').notNull(),
+    product_id: integer('product_id').references(() => products.id, { onDelete: 'cascade' }).notNull(),
+    option_name: text('option_name').notNull().unique(),
     created_at: timestamp('created_at').defaultNow(),
     updated_at: timestamp('updated_at').defaultNow().$onUpdate(() => new Date())
 });
@@ -157,7 +157,7 @@ export const configurationOptions = pgTable("configuration_options", {
 // Configuration Values Table
 export const configurationValues = pgTable("configuration_values", {
     id: serial('id').primaryKey(),
-    option_id: integer('option_id').references(() => configurationOptions.id).notNull(),
+    option_id: integer('option_id').references(() => configurationOptions.id, { onDelete: 'cascade' }).notNull(),
     value_name: text('value_name').notNull(),
     price_adjustment: decimal('price_adjustment').notNull(),
     created_at: timestamp('created_at').defaultNow(),
@@ -170,7 +170,7 @@ export const productimageEnum = pgEnum("productimages", ["2D", "3D"])
 // Product Images Table
 export const productImages = pgTable("product_images", {
     id: serial('id').primaryKey(),
-    product_id: integer('product_id').references(() => products.id).notNull(),
+    product_id: integer('product_id').references(() => products.id, { onDelete: 'cascade' }).notNull(),
     image_type: productimageEnum("productimages").notNull(),
     image_url: text('image_url').notNull(),
     created_at: timestamp('created_at').defaultNow(),
@@ -182,7 +182,7 @@ export const productImages = pgTable("product_images", {
 export const proposals = pgTable("proposals", {
     id: serial('id').primaryKey(),
     user_id: integer('user_id').references(() => users.id).notNull(),
-    product_id: integer('product_id').references(() => products.id).notNull(),
+    product_id: integer('product_id').references(() => products.id, { onDelete: 'cascade' }).notNull(),
     selected_options: json('selected_options').notNull(),
     total_price: integer('total_price').notNull(),
     status: text('status').notNull(),
@@ -408,3 +408,5 @@ export type ProfileType = NoInfer<typeof profileTypeEnum>;
 
 export type Company = InferModel<typeof company>;
 export type CompanyProduct = InferModel<typeof companyProducts>;
+export type InsertConfigureOption = InferModel<typeof configurationOptions, 'insert'>;
+export type InsertConfigureOptionValue = InferModel<typeof configurationValues, 'insert'>;

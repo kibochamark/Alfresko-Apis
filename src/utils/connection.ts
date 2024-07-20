@@ -44,7 +44,7 @@ const pool = new Pool({
 //   database: "Configurator",
 // });
 
-const db = drizzle(pool);
+const db = drizzle(pool, {schema:schema});
 
 
 
