@@ -3,6 +3,89 @@ import db from "../utils/connection"
 import { InsertPermission, InsertRole, User, permissions, profiles, refreshTokens, rolePermissions, roles, users, company, profileTypeEnum, ProfileType } from './schema';
 import { hashPassword } from '../utils/authenticationUtilities';
 import { createHash } from "../utils/HasherPassword";
+import { and, gte } from "drizzle-orm";
+import { subscriptionPlans, subscriptions, InsertSubscriptionPlan, InsertSubscription } from './schema';
+
+// Create a new subscription plan
+export const createSubscriptionPlan = async (plan: InsertSubscriptionPlan) => {
+    return await db.insert(subscriptionPlans).values(plan).returning({
+        id: subscriptionPlans.id,
+        name: subscriptionPlans.name,
+        description: subscriptionPlans.description,
+        price: subscriptionPlans.price,
+        discount: subscriptionPlans.discount,
+        duration_months: subscriptionPlans.duration
+    });
+};
+
+// Update an existing subscription plan
+export const updateSubscriptionPlan = async (plan: Partial<InsertSubscriptionPlan>, planId: number) => {
+    return await db.update(subscriptionPlans).set(plan).where(eq(subscriptionPlans.id, planId)).returning({
+        id: subscriptionPlans.id,
+        name: subscriptionPlans.name,
+        description: subscriptionPlans.description,
+        price: subscriptionPlans.price,
+        discount: subscriptionPlans.discount,
+        duration_months: subscriptionPlans.duration
+    });
+};
+
+// Get all subscription plans
+export const getSubscriptionPlans = async () => {
+    return await db.select().from(subscriptionPlans);
+};
+
+// Get a specific subscription plan by ID
+export const getSubscriptionPlanById = async (planId: number) => {
+    return await db.select().from(subscriptionPlans).where(eq(subscriptionPlans.id, planId));
+};
+
+// Create a new subscription
+export const createSubscription = async (subscription: InsertSubscription) => {
+    return await db.insert(subscriptions).values(subscription).returning({
+        id: subscriptions.id,
+        company_id: subscriptions.company_id,
+        plan_id: subscriptions.plan_id,
+        status: subscriptions.status,
+        start_date: subscriptions.start_date,
+        end_date: subscriptions.end_date
+    });
+};
+
+// Update an existing subscription
+export const updateSubscription = async (subscription: Partial<InsertSubscription>, subscriptionId: number) => {
+    return await db.update(subscriptions).set(subscription).where(eq(subscriptions.id, subscriptionId)).returning({
+        id: subscriptions.id,
+        company_id: subscriptions.company_id,
+        plan_id: subscriptions.plan_id,
+        status: subscriptions.status,
+        start_date: subscriptions.start_date,
+        end_date: subscriptions.end_date
+    });
+};
+
+// Get all subscriptions for a specific company
+export const getSubscriptionsByCompany = async (companyId: number) => {
+    return await db.select().from(subscriptions).where(eq(subscriptions.company_id, companyId));
+};
+
+// Check if a company has an active subscription
+export const checkActiveSubscription = async (companyId: number) => {
+    const currentDate = new Date();
+    const activeSubscription = await db.select()
+        .from(subscriptions)
+        .where(
+            and(
+                eq(subscriptions.company_id, companyId),
+                eq(subscriptions.status, 'active'),
+                gte(subscriptions.end_date, currentDate)
+            )
+        )
+        .limit(1);
+        
+    return activeSubscription.length > 0 ? activeSubscription[0] : null;
+};
+
 
 
 
