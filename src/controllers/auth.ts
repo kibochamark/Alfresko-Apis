@@ -17,12 +17,12 @@ export async function loginUser(req: express.Request, response: express.Response
         passport.authenticate('local', async (err: any, user: any, info: any) => {
             if (err) return next(err);
             if (!user) return response.status(401).json({ message: info.message }).end();
-            console.log(user)
-            if (user.company_id){
-            const activeSubscription = await checkActiveSubscription(user.company_id);
-            if (!activeSubscription) {
-            return response.status(403).json({ message: 'Company does not have an active subscription' });
-            }}
+            
+            // if (user[0].company_id){
+            // const activeSubscription = await checkActiveSubscription(user[0].company_id);
+            // if (!activeSubscription) {
+            // return response.status(403).json({ message: 'Company does not have an active subscription' });
+            // }}
             
 
         

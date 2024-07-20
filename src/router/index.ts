@@ -12,6 +12,7 @@ import { assignpermissiontorole, createPermission, deletePermission, getPermissi
 import { forgotPassword, resetPassword } from '../controllers/passwordreset';
 import passport from 'passport';
 import { newcategory, removecategory, retrievecategories, retrievecategory, updatecategory } from '../controllers/category';
+import checkActiveSubscriptionMiddleware from '../middleware/checksubscription';
 // import { getCategory, postcategory, getCatgeoryById, updatecategory, deletecategoryById } from '../controllers/category';
 // import { upload } from '../utils/upload';
 // import { deletecommentById, getcommentById, getcomments, postcomment, updatecomment } from '../controllers/comment';
@@ -44,6 +45,7 @@ routes.post("/reset-password", resetPassword);
 
 // profile
 routes.post("/createprofile", checkTokenBlacklist, authMiddleware, createProfileHandler)
+// routes.post("/createprofile", checkTokenBlacklist, authMiddleware, checkActiveSubscriptionMiddleware, createProfileHandler)
 routes.put("/updateProfile", checkTokenBlacklist, authMiddleware, updateProfileHandler)
 routes.get("/getUsersWithProfiles", checkTokenBlacklist, authMiddleware, getUsersWithProfilesHandler)
 routes.get("/getUserWithProfile/:id", checkTokenBlacklist, authMiddleware, getUserWithProfileHandler)
@@ -55,6 +57,7 @@ routes.get("/getrole", checkTokenBlacklist, authMiddleware, getRole)
 routes.get("/getroles", checkTokenBlacklist, authMiddleware, getRoles)
 routes.delete("/deleterole", checkTokenBlacklist, authMiddleware, deleteRole)
 routes.patch("/updaterole", checkTokenBlacklist, authMiddleware, updateRole)
+
 
 routes.post("/createrole", checkTokenBlacklist, authMiddleware, createRole);
 
