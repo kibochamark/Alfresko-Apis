@@ -1,6 +1,7 @@
 
-import { integer, pgEnum, pgTable, primaryKey, serial, text, timestamp, varchar } from "drizzle-orm/pg-core";
+import { decimal, integer, json, pgEnum, pgTable, primaryKey, serial, text, timestamp, varchar } from "drizzle-orm/pg-core";
 import { InferModel, SQL, relations } from "drizzle-orm";
+import exp from "constants";
 
 // Roles Table
 export const roles = pgTable("roles", {
@@ -94,6 +95,85 @@ export const rolePermissions = pgTable("role_permissions", {
 }));
 
 
+// Products Table
+export const products = pgTable("products", {
+    id: serial('id').primaryKey(),
+    name: text('name').notNull().unique(),
+    description: text('description'),
+    category_id:integer('category_id').references(() => categories.id).notNull(),
+    base_price: decimal('base_price').notNull(),
+    created_at: timestamp('created_at').defaultNow(),
+    updated_at: timestamp("updated_at").defaultNow().$onUpdate(() => new Date())
+});
+
+//company products
+export const companyProducts = pgTable("company_products", {
+    id: serial('id').primaryKey(),
+    company_id:integer('company_id').references(() => company.id).notNull(),
+    product_id:integer('product_id').references(() => products.id).notNull(),
+    created_at: timestamp('created_at').defaultNow(),
+    updated_at: timestamp("updated_at").defaultNow().$onUpdate(() => new Date())
+});
+
+
+
+//categories table
+
+export const categories = pgTable("categories", {
+    id: serial('id').primaryKey(),
+    name: text('name').notNull().unique(),
+    description: text('description'),
+    created_at: timestamp('created_at').defaultNow(),
+    updated_at: timestamp("updated_at").defaultNow().$onUpdate(() => new Date())
+})
+
+
+// Configuration Options Table
+export const configurationOptions = pgTable("configuration_options", {
+    id: serial('id').primaryKey(),
+    product_id: integer('product_id').references(() => products.id).notNull(),
+    option_name: text('option_name').notNull(),
+    created_at: timestamp('created_at').defaultNow(),
+    updated_at: timestamp('updated_at').defaultNow().$onUpdate(() => new Date())
+});
+
+// Configuration Values Table
+export const configurationValues = pgTable("configuration_values", {
+    id: serial('id').primaryKey(),
+    option_id: integer('option_id').references(() => configurationOptions.id).notNull(),
+    value_name: text('value_name').notNull(),
+    price_adjustment: decimal('price_adjustment').notNull(),
+    created_at: timestamp('created_at').defaultNow(),
+    updated_at: timestamp('updated_at').defaultNow().$onUpdate(() => new Date())
+});
+
+
+export const productimageEnum = pgEnum("productimages", ["2D", "3D"])
+
+// Product Images Table
+export const productImages = pgTable("product_images", {
+    id: serial('id').primaryKey(),
+    product_id: integer('product_id').references(() => products.id).notNull(),
+    image_type: productimageEnum("productimages").notNull(),
+    image_url: text('image_url').notNull(),
+    created_at: timestamp('created_at').defaultNow(),
+    updated_at: timestamp('updated_at').defaultNow().$onUpdate(() => new Date())
+});
+
+
+// Proposals Table
+export const proposals = pgTable("proposals", {
+    id: serial('id').primaryKey(),
+    user_id: integer('user_id').references(() => users.id).notNull(),
+    product_id: integer('product_id').references(() => products.id).notNull(),
+    selected_options: json('selected_options').notNull(),
+    total_price: integer('total_price').notNull(),
+    status: text('status').notNull(),
+    created_at: timestamp('created_at').defaultNow(),
+    updated_at: timestamp('updated_at').defaultNow().$onUpdate(() => new Date())
+});
+
+
 
 // Relations
 export const userRelations = relations(users, ({ one, many }) => ({
@@ -122,6 +202,64 @@ export const rolePermissionRelations = relations(rolePermissions, ({ one }) => (
         references: [permissions.id]
     })
 }));
+
+export const productRelations = relations(products, ({ many }) => ({
+    configuration_options: many(configurationOptions),
+    product_images: many(productImages),
+    proposals:many(proposals)
+}));
+
+export const configurationOptionRelations = relations(configurationOptions, ({ one, many }) => ({
+    product: one(products, {
+        fields: [configurationOptions.product_id],
+        references: [products.id]
+    }),
+    configuration_values: many(configurationValues)
+}));
+
+export const configurationValueRelations = relations(configurationValues, ({ one }) => ({
+    configuration_option: one(configurationOptions, {
+        fields: [configurationValues.option_id],
+        references: [configurationOptions.id]
+    })
+}));
+
+export const productImageRelations = relations(productImages, ({ one }) => ({
+    product: one(products, {
+        fields: [productImages.product_id],
+        references: [products.id]
+    })
+}));
+
+export const companyRelations = relations(company, ({ many }) => ({
+    company_products: many(companyProducts)
+}));
+
+export const companyProductRelations = relations(companyProducts, ({ one }) => ({
+    company: one(company, {
+        fields: [companyProducts.company_id],
+        references: [company.id]
+    }),
+    product: one(products, {
+        fields: [companyProducts.product_id],
+        references: [products.id]
+    })
+}));
+
+
+export const proposalRelations = relations(proposals, ({ one }) => ({
+    user: one(users),
+    product: one(products)
+}));
+
+
+
+
+
+
+
+
+
 
 
 
@@ -220,3 +358,5 @@ export type RefreshToken = InferModel<typeof refreshTokens>;
 
 export type ProfileType = NoInfer<typeof profileTypeEnum>;
 
+export type Company = InferModel<typeof company>;
+export type CompanyProduct = InferModel<typeof companyProducts>;
