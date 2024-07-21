@@ -597,7 +597,13 @@ export const getConfigValueById = async (id:number) => {
 
 
 export const updateConfigValue = async (id:number, updatedValues:InsertConfigureOptionValue) => {
-    return await db.update(configurationValues).set(updatedValues).where(eq(configurationValues.id,id));
+    return await db.update(configurationValues).set(updatedValues).where(eq(configurationValues.id,id)).returning({
+        id: configurationValues.id,
+        option_id: configurationValues.option_id,
+        value_name: configurationValues.value_name,
+        price_adjustment: configurationValues.price_adjustment,
+        updated_at: configurationValues.updated_at,
+    });
 };
 
 
