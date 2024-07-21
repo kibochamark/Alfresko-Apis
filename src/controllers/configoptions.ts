@@ -95,7 +95,7 @@ export const updateoption =async(req:Request, res:Response)=>{
         const updatedoption = await updateconfigoption({
             option_name: optionname,
         }, parseInt(id))
-        if(!updatedoption) return res.status(400).json({
+        if(updatedoption.length <= 0) return res.status(400).json({
             error:"failed to update resource or it does not exist"
         }).end()
         return res.status(201).json(updatedoption).end()
