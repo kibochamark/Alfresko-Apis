@@ -74,9 +74,9 @@ export const newconfigoption =async(req:Request, res:Response)=>{
             error:"failed to create resource"
         }).end()
         return res.status(201).json(option).end()
-    }catch{
+    }catch(error){
         return res.status(500).json({
-            error:"something went wrong"
+            error:error?.message
         }).end()
     }
 
