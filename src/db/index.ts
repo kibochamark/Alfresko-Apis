@@ -561,7 +561,14 @@ export const getConfigoptionswithvaluesbyproductid = async(id:number)=>{
 
 //config values
 export const createConfigValue = async (optionvalues:InsertConfigureOptionValue) => {
-    return await db.insert(configurationValues).values(optionvalues);
+    return await db.insert(configurationValues).values(optionvalues).returning({
+        id: configurationValues.id,
+        option_id: configurationValues.option_id,
+        value_name: configurationValues.value_name,
+        price_adjustment: configurationValues.price_adjustment,
+        created_at: configurationValues.created_at,
+        updated_at: configurationValues.updated_at,
+    });
 };
 
 
@@ -590,7 +597,13 @@ export const getConfigValueById = async (id:number) => {
 
 
 export const updateConfigValue = async (id:number, updatedValues:InsertConfigureOptionValue) => {
-    return await db.update(configurationValues).set(updatedValues).where(eq(configurationValues.id,id));
+    return await db.update(configurationValues).set(updatedValues).where(eq(configurationValues.id,id)).returning({
+        id: configurationValues.id,
+        option_id: configurationValues.option_id,
+        value_name: configurationValues.value_name,
+        price_adjustment: configurationValues.price_adjustment,
+        updated_at: configurationValues.updated_at,
+    });
 };
 
 
