@@ -90,16 +90,28 @@ routes.post("/createconfigoptionvalue", checkTokenBlacklist, authMiddleware,crea
 routes.delete("/deleteconfigoptionvalue", checkTokenBlacklist, authMiddleware, deleteConfigValueHandler)
 routes.patch("/updateconfigoptionvalue", checkTokenBlacklist, authMiddleware, updateConfigValueHandler)
 
+// Route to fetch all products with related images and configuration options
+routes.get('/products',checkTokenBlacklist, authMiddleware, getAllProducts);
 
+// Route to fetch a single product by ID with related images and configuration options
+routes.get('/products/:id',checkTokenBlacklist, authMiddleware, getProductById);
+
+// Route to fetch a single product by company ID with related images and configuration options
+routes.get('/company/:companyId/product', checkTokenBlacklist, authMiddleware,getProductByCompanyId);
+
+// Route to fetch all products by company ID with related images and configuration options
+routes.get('/company/:companyId/products',checkTokenBlacklist, authMiddleware, getAllProductsByCompanyId);
+
+// Route to create a new product
 routes.post('/products', checkTokenBlacklist, authMiddleware, createProduct);
-routes.get('/products',  checkTokenBlacklist, authMiddleware, getAllProducts);
-routes.get('/products/:id', checkTokenBlacklist, authMiddleware, getProductById);
-routes.put('/products/:id', checkTokenBlacklist, authMiddleware, updateProductById);
+
+// Route to update a product by ID
+routes.put('/products/:id',checkTokenBlacklist, authMiddleware, updateProductById);
+
+// Route to delete a product by ID
 routes.delete('/products/:id', checkTokenBlacklist, authMiddleware, deleteProductById);
+
+// Route to add an image to a product
 routes.post('/products/:id/images', checkTokenBlacklist, authMiddleware, addProductImage);
-routes.get('/products/company/:companyId', checkTokenBlacklist, authMiddleware, getAllProductsByCompanyId);
-routes.get('/product/company/:companyId', checkTokenBlacklist, authMiddleware, getProductByCompanyId);
-
-
 
 export default routes;
