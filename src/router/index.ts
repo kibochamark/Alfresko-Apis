@@ -12,7 +12,7 @@ import { newcategory, removecategory, retrievecategories, retrievecategory, upda
 import checkActiveSubscriptionMiddleware from '../middleware/checksubscription';
 import { newconfigoption, removeoption, retrieveconfigoptions, retrieveoption, updateoption } from '../controllers/configoptions';
 import { createConfigValueHandler, deleteConfigValueHandler, getConfigValueByIdHandler,  getConfigValuesHandler, updateConfigValueHandler } from '../controllers/optionvalues';
-import { addProductImage, createProduct, deleteProductById, getAllProducts, getProductById, updateProductById } from '../controllers/product';
+import { addProductImage, createProduct, deleteProductById, getAllProducts, getAllProductsByCompanyId, getProductByCompanyId, getProductById, updateProductById } from '../controllers/product';
 
 
 
@@ -97,6 +97,8 @@ routes.get('/products/:id', checkTokenBlacklist, authMiddleware, getProductById)
 routes.put('/products/:id', checkTokenBlacklist, authMiddleware, updateProductById);
 routes.delete('/products/:id', checkTokenBlacklist, authMiddleware, deleteProductById);
 routes.post('/products/:id/images', checkTokenBlacklist, authMiddleware, addProductImage);
+routes.get('/products/company/:companyId', checkTokenBlacklist, authMiddleware, getAllProductsByCompanyId);
+routes.get('/product/company/:companyId', checkTokenBlacklist, authMiddleware, getProductByCompanyId);
 
 
 

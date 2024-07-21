@@ -99,3 +99,32 @@ export const getAllProducts = async (_req: Request, res: Response) => {
         res.status(500).json({ message: 'Error getting products', error: error.message });
     }
 };
+export const getProductByCompanyId = async (req: Request, res: Response) => {
+    try {
+        const { companyId } = req.params;
+        const product = await db.select(productFields)
+                                .from(products)
+                                .innerJoin(companyProducts, eq(products.id, companyProducts.product_id))
+                                .where(eq(companyProducts.company_id, Number(companyId)))
+                                .limit(1);
+        if (!product.length) {
+            return res.status(404).json({ message: 'Product not found' });
+        }
+        res.status(200).json(product[0]);
+    } catch (error) {
+        res.status(500).json({ message: 'Error getting product', error: error.message });
+    }
+};
+
+export const getAllProductsByCompanyId = async (req: Request, res: Response) => {
+    try {
+        const { companyId } = req.params;
+        const productsList = await db.select(productFields)
+                                    .from(products)
+                                    .innerJoin(companyProducts, eq(products.id, companyProducts.product_id))
+                                    .where(eq(companyProducts.company_id, Number(companyId)));
+        res.status(200).json(productsList);
+    } catch (error) {
+        res.status(500).json({ message: 'Error getting products', error: error.message });
+    }
+};
