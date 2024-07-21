@@ -158,7 +158,7 @@ export const configurationOptions = pgTable("configuration_options", {
 export const configurationValues = pgTable("configuration_values", {
     id: serial('id').primaryKey(),
     option_id: integer('option_id').references(() => configurationOptions.id, { onDelete: 'cascade' }).notNull(),
-    value_name: text('value_name').notNull(),
+    value_name: text('value_name').notNull().unique(),
     price_adjustment: decimal('price_adjustment').notNull(),
     created_at: timestamp('created_at').defaultNow(),
     updated_at: timestamp('updated_at').defaultNow().$onUpdate(() => new Date())

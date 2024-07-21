@@ -1,5 +1,6 @@
 import { createConfigValue, deleteConfigValue, getConfigValueById, getConfigValues, updateConfigValue } from '../db';
 import { Request, Response } from 'express';
+import { getconfigoptionbyid } from '../db/index';
 
 export const createConfigValueHandler = async (req: Request, res: Response) => {
     try {
@@ -9,12 +10,29 @@ export const createConfigValueHandler = async (req: Request, res: Response) => {
                 error:"missing values in schema"
             })
         }
-        const newConfigValue = await createConfigValue({
-            option_id:option_id,
-            value_name:value_name,
-            price_adjustment:price_adjustment
-        });
-        return res.status(201).json(newConfigValue).end();
+
+        console.log(option_id, value_name, price_adjustment)
+
+        const option = await getconfigoptionbyid(parseInt(option_id))
+
+        console.log(option)
+
+        if(option.length > 0){
+            const newConfigValue = await createConfigValue({
+                option_id:parseInt(option_id),
+                value_name:value_name,
+                price_adjustment:price_adjustment
+            });
+    
+        
+            return res.status(201).json(newConfigValue).end();
+        }
+
+        return res.status(404).json({
+            error:"option not found"
+        }).end()
+
+       
     } catch (error) {
         return res.status(500).json({ error: error?.message }).end();
     }

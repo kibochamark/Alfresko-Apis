@@ -561,7 +561,14 @@ export const getConfigoptionswithvaluesbyproductid = async(id:number)=>{
 
 //config values
 export const createConfigValue = async (optionvalues:InsertConfigureOptionValue) => {
-    return await db.insert(configurationValues).values(optionvalues);
+    return await db.insert(configurationValues).values(optionvalues).returning({
+        id: configurationValues.id,
+        option_id: configurationValues.option_id,
+        value_name: configurationValues.value_name,
+        price_adjustment: configurationValues.price_adjustment,
+        created_at: configurationValues.created_at,
+        updated_at: configurationValues.updated_at,
+    });
 };
 
 
