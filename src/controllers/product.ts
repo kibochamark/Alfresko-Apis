@@ -3,6 +3,8 @@ import db from '../utils/connection';
 import { products, productImages, companyProducts, configurationOptions, configurationValues } from '../db/schema';
 import { eq } from 'drizzle-orm';
 import { retrieveproducts } from '../db';
+import { v2 as cloudinary } from 'cloudinary';
+import { UploadApiResponse } from 'cloudinary';
 
 // Define the fields to return for products
 const productFields = {
@@ -153,16 +155,49 @@ export const getAllProductsByCompanyId = async (req: Request, res: Response) => 
     }
 };
 
+
+// Create a new product
+
+
 // Create a new product
 export const createProduct = async (req: Request, res: Response) => {
     try {
         const { name, description, category_id, base_price } = req.body;
+
+        if (!name || !description || !category_id || !base_price) {
+            return res.status(400).json({ message: 'Missing required product information' });
+        }
+
+        // Insert the product into the database
         const newProduct = await db.insert(products).values({ name, description, category_id, base_price }).returning(productFields);
+        const productId = newProduct[0].id;
+
+        // Process images if they exist
+        if (req.files) {
+            const files = req.files as Express.Multer.File[];
+
+            const uploadPromises: Promise<UploadApiResponse>[] = files.map(file => cloudinary.uploader.upload(file.path));
+
+            const uploadResults = await Promise.all(uploadPromises);
+
+            const imageEntries = uploadResults.map(result => ({
+                product_id: productId,
+                image_type: '2D' as const, // assuming 2D as default, you can add logic to determine image type
+                image_url: result.secure_url
+            }));
+
+            await db.insert(productImages).values(imageEntries).returning(productImageFields);
+        }
+
         res.status(201).json(newProduct);
     } catch (error) {
+        console.error('Error creating product:', error);
         res.status(500).json({ message: 'Error creating product', error: error.message });
     }
 };
+
+
+
 
 // Update a product by ID
 export const updateProductById = async (req: Request, res: Response) => {

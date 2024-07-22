@@ -13,6 +13,7 @@ import checkActiveSubscriptionMiddleware from '../middleware/checksubscription';
 import { newconfigoption, removeoption, retrieveconfigoptions, retrieveoption, updateoption } from '../controllers/configoptions';
 import { createConfigValueHandler, deleteConfigValueHandler, getConfigValueByIdHandler,  getConfigValuesHandler, updateConfigValueHandler } from '../controllers/optionvalues';
 import { addProductImage, createProduct, deleteProductById, getAllProducts, getAllProductsByCompanyId, getProductByCompanyId, getProductById, updateProductById } from '../controllers/product';
+import { upload } from '../utils/upload';
 
 
 
@@ -104,6 +105,7 @@ routes.get('/company/:companyId/products',checkTokenBlacklist, authMiddleware, g
 
 // Route to create a new product
 routes.post('/products', checkTokenBlacklist, authMiddleware, createProduct);
+routes.post('/product', upload.array('images', 10), createProduct);
 
 // Route to update a product by ID
 routes.put('/products/:id',checkTokenBlacklist, authMiddleware, updateProductById);

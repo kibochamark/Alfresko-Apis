@@ -12,14 +12,13 @@ cloudinary.config({
 // Create a storage engine to save the files in Cloudinary
 const storage = new CloudinaryStorage({
     cloudinary: cloudinary,
-    params:async (req, file) => {
-        // async code using `req` and `file`
-        // ...
+    params: async (req, file) => {
         return {
-          folder: 'uploads',
-          public_id: 'posts',
+            folder: 'uploads',
+            public_id: `${Date.now()}-${file.originalname}`,
+            format: 'jpg', // or any other format you want to use
         };
-      },
+    },
 });
-   
+
 export const upload = multer({ storage: storage });
