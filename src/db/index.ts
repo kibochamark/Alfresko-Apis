@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import db from "../utils/connection"
-import { InsertPermission, InsertRole, User, permissions, profiles, refreshTokens, rolePermissions, roles, users, company, profileTypeEnum, ProfileType, categories, InsertCategory, InsertConfigureOption, configurationOptions, configurationValues, InsertConfigureOptionValue } from './schema';
+import { InsertPermission, InsertRole, User, permissions, profiles, refreshTokens, rolePermissions, roles, users, company, profileTypeEnum, ProfileType, categories, InsertCategory, InsertConfigureOption, configurationOptions, configurationValues, InsertConfigureOptionValue, products } from './schema';
 import { hashPassword } from '../utils/authenticationUtilities';
 import { createHash } from "../utils/HasherPassword";
 import { and, gte } from "drizzle-orm";
@@ -650,4 +650,19 @@ export const retrieveProductById = async (id: number) => {
             },
         },
     });
+};
+export const updateProduct = async (id: number, data: any) => {
+    return await db
+        .update(products)
+        .set(data)
+        .where(eq(products.id, id))
+        .returning({
+            id: products.id,
+            name: products.name,
+            description: products.description,
+            category_id: products.category_id,
+            base_price: products.base_price,
+            created_at: products.created_at,
+            updated_at: products.updated_at,
+        });
 };

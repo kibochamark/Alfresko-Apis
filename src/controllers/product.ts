@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import db from '../utils/connection';
 import { products, productImages, companyProducts, configurationOptions, configurationValues } from '../db/schema';
 import { eq } from 'drizzle-orm';
-import { retrieveProductById, retrieveproducts } from '../db';
+import { retrieveProductById, retrieveproducts, updateProduct } from '../db';
 import { v2 as cloudinary } from 'cloudinary';
 import { UploadApiResponse } from 'cloudinary';
 
@@ -188,18 +188,18 @@ export const createProduct = async (req: Request, res: Response) => {
 
 
 // Update a product by ID
-export const updateProductById = async (req: Request, res: Response) => {
-    try {
-        const { id } = req.params;
-        const updatedProduct = await db.update(products).set(req.body).where(eq(products.id, Number(id))).returning(productFields);
-        if (!updatedProduct.length) {
-            return res.status(404).json({ message: 'Product not found' });
-        }
-        res.status(200).json(updatedProduct[0]);
-    } catch (error) {
-        res.status  (500).json({ message: 'Error updating product', error: error.message });
-    }
-};
+// export const updateProductById = async (req: Request, res: Response) => {
+//     try {
+//         const { id } = req.params;
+//         const updatedProduct = await db.update(products).set(req.body).where(eq(products.id, Number(id))).returning(productFields);
+//         if (!updatedProduct.length) {
+//             return res.status(404).json({ message: 'Product not found' });
+//         }
+//         res.status(200).json(updatedProduct[0]);
+//     } catch (error) {
+//         res.status  (500).json({ message: 'Error updating product', error: error.message });
+//     }
+// };
 
 // Delete a product by ID
 export const deleteProductById = async (req: Request, res: Response) => {
@@ -237,5 +237,19 @@ export const getProductById = async (req: Request, res: Response) => {
         res.status(200).json(product);
     } catch (error) {
         res.status(500).json({ message: 'Error getting product', error: error.message });
+    }
+};
+export const updateProductById = async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params;
+        const updatedProduct = await updateProduct(Number(id), req.body);
+
+        if (!updatedProduct.length) {
+            return res.status(404).json({ message: 'Product not found' });
+        }
+
+        res.status(200).json(updatedProduct[0]);
+    } catch (error) {
+        res.status(500).json({ message: 'Error updating product', error: (error as Error).message });
     }
 };
