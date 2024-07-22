@@ -633,3 +633,21 @@ export const retrieveproducts = async () => {
         }
     })
 }
+export const retrieveProductById = async (id: number) => {
+    return await db.query.products.findFirst({
+        where: (products) => eq(products.id, id),
+        with: {
+            configuration_options: {
+                with: {
+                    configuration_values: true,
+                },
+            },
+            product_images: {
+                columns: {
+                    image_url: true,
+                    image_type: true,
+                },
+            },
+        },
+    });
+};

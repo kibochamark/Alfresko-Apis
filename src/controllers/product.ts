@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import db from '../utils/connection';
 import { products, productImages, companyProducts, configurationOptions, configurationValues } from '../db/schema';
 import { eq } from 'drizzle-orm';
-import { retrieveproducts } from '../db';
+import { retrieveProductById, retrieveproducts } from '../db';
 import { v2 as cloudinary } from 'cloudinary';
 import { UploadApiResponse } from 'cloudinary';
 
@@ -49,19 +49,7 @@ const configValueFields = {
 // Fetch all products with related images and configuration options
 export const getAllProducts = async (_req: Request, res: Response) => {
     try {
-        // const productsList = await db.select({
-        //     ...productFields,
-        //     images: db.select(productImageFields)
-        //         .from(productImages)
-        //         .where(eq(productImages.product_id, products.id)) as any, // Cast to any to resolve type issues
-        //     configOptions: db.select({
-        //         ...configOptionFields,
-        //         values: db.select(configValueFields)
-        //             .from(configurationValues)
-        //             .where(eq(configurationValues.option_id, configurationOptions.id)) as any, // Cast to any to resolve type issues
-        //     }).from(configurationOptions)
-        //         .where(eq(configurationOptions.product_id, products.id)) as any // Cast to any to resolve type issues
-        // }).from(products);
+                
         const productsList = await retrieveproducts()
 
         res.status(200).json(productsList);
@@ -71,32 +59,32 @@ export const getAllProducts = async (_req: Request, res: Response) => {
 };
 
 // Fetch a product by ID with related images and configuration options
-export const getProductById = async (req: Request, res: Response) => {
-    try {
-        const { id } = req.params;
-        const product = await db.select({
-            ...productFields,
-            images: db.select(productImageFields)
-                .from(productImages)
-                .where(eq(productImages.product_id, Number(id))) as any, // Cast to any to resolve type issues
-            configOptions: db.select({
-                ...configOptionFields,
-                values: db.select(configValueFields)
-                    .from(configurationValues)
-                    .where(eq(configurationValues.option_id, configurationOptions.id)) as any, // Cast to any to resolve type issues
-            }).from(configurationOptions)
-                .where(eq(configurationOptions.product_id, Number(id))) as any // Cast to any to resolve type issues
-        }).from(products).where(eq(products.id, Number(id)));
+// export const getProductById = async (req: Request, res: Response) => {
+//     try {
+//         const { id } = req.params;
+//         const product = await db.select({
+//             ...productFields,
+//             images: db.select(productImageFields)
+//                 .from(productImages)
+//                 .where(eq(productImages.product_id, Number(id))) as any, // Cast to any to resolve type issues
+//             configOptions: db.select({
+//                 ...configOptionFields,
+//                 values: db.select(configValueFields)
+//                     .from(configurationValues)
+//                     .where(eq(configurationValues.option_id, configurationOptions.id)) as any, // Cast to any to resolve type issues
+//             }).from(configurationOptions)
+//                 .where(eq(configurationOptions.product_id, Number(id))) as any // Cast to any to resolve type issues
+//         }).from(products).where(eq(products.id, Number(id)));
 
-        if (!product.length) {
-            return res.status(404).json({ message: 'Product not found' });
-        }
+//         if (!product.length) {
+//             return res.status(404).json({ message: 'Product not found' });
+//         }
 
-        res.status(200).json(product[0]);
-    } catch (error) {
-        res.status(500).json({ message: 'Error getting product', error: error.message });
-    }
-};
+//         res.status(200).json(product[0]);
+//     } catch (error) {
+//         res.status(500).json({ message: 'Error getting product', error: error.message });
+//     }
+// };
 
 // Fetch a product by company ID with related images and configuration options
 export const getProductByCompanyId = async (req: Request, res: Response) => {
@@ -235,5 +223,19 @@ export const addProductImage = async (req: Request, res: Response) => {
         res.status(201).json(newImage);
     } catch (error) {
         res.status(500).json({ message: 'Error adding image', error: error.message });
+    }
+};
+export const getProductById = async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params;
+        const product = await retrieveProductById(Number(id));
+
+        if (!product) {
+            return res.status(404).json({ message: 'Product not found' });
+        }
+
+        res.status(200).json(product);
+    } catch (error) {
+        res.status(500).json({ message: 'Error getting product', error: error.message });
     }
 };

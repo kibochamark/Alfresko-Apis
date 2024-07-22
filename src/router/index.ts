@@ -104,8 +104,8 @@ routes.get('/company/:companyId/product', checkTokenBlacklist, authMiddleware,ge
 routes.get('/company/:companyId/products',checkTokenBlacklist, authMiddleware, getAllProductsByCompanyId);
 
 // Route to create a new product
-routes.post('/products', checkTokenBlacklist, authMiddleware, createProduct);
-routes.post('/product', upload.array('images', 10), createProduct);
+// routes.post('/products', checkTokenBlacklist, authMiddleware, createProduct);
+routes.post('/product',checkTokenBlacklist, authMiddleware, upload.array('images', 10), createProduct);
 
 // Route to update a product by ID
 routes.put('/products/:id',checkTokenBlacklist, authMiddleware, updateProductById);
