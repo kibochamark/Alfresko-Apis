@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import db from '../utils/connection';
 import { products, productImages, companyProducts, configurationOptions, configurationValues } from '../db/schema';
 import { eq } from 'drizzle-orm';
-import { retrieveProductById, retrieveproducts, updateProduct } from '../db';
+import { createconfigoption, createConfigValue, retrieveProductById, retrieveproducts, updateProduct } from '../db';
 import { v2 as cloudinary } from 'cloudinary';
 import { UploadApiResponse } from 'cloudinary';
 
@@ -49,7 +49,7 @@ const configValueFields = {
 // Fetch all products with related images and configuration options
 export const getAllProducts = async (_req: Request, res: Response) => {
     try {
-                
+
         const productsList = await retrieveproducts()
 
         res.status(200).json(productsList);
@@ -103,9 +103,9 @@ export const getProductByCompanyId = async (req: Request, res: Response) => {
             }).from(configurationOptions)
                 .where(eq(configurationOptions.product_id, products.id)) as any // Cast to any to resolve type issues
         }).from(products)
-          .innerJoin(companyProducts, eq(products.id, companyProducts.product_id))
-          .where(eq(companyProducts.company_id, Number(companyId)))
-          .limit(1);
+            .innerJoin(companyProducts, eq(products.id, companyProducts.product_id))
+            .where(eq(companyProducts.company_id, Number(companyId)))
+            .limit(1);
 
         if (!product.length) {
             return res.status(404).json({ message: 'Product not found' });
@@ -134,8 +134,8 @@ export const getAllProductsByCompanyId = async (req: Request, res: Response) => 
             }).from(configurationOptions)
                 .where(eq(configurationOptions.product_id, products.id)) as any // Cast to any to resolve type issues
         }).from(products)
-          .innerJoin(companyProducts, eq(products.id, companyProducts.product_id))
-          .where(eq(companyProducts.company_id, Number(companyId)));
+            .innerJoin(companyProducts, eq(products.id, companyProducts.product_id))
+            .where(eq(companyProducts.company_id, Number(companyId)));
 
         res.status(200).json(productsList);
     } catch (error) {
@@ -150,10 +150,18 @@ export const getAllProductsByCompanyId = async (req: Request, res: Response) => 
 // Create a new product
 export const createProduct = async (req: Request, res: Response) => {
     try {
-        const { name, description, category_id, base_price } = req.body;
+        const { name, description, category_id, base_price, options } = req.body;
 
-        if (!name || !description || !category_id || !base_price) {
+        if (!name || !description || !category_id || !base_price || !options) {
             return res.status(400).json({ message: 'Missing required product information' });
+        }
+
+        // Parse options if it's a JSON string
+        let parsedOptions;
+        try {
+            parsedOptions = typeof options === 'string' ? JSON.parse(options) : options;
+        } catch (e) {
+            return res.status(400).json({ message: 'Invalid format for options' });
         }
 
         // Insert the product into the database
@@ -170,11 +178,47 @@ export const createProduct = async (req: Request, res: Response) => {
 
             const imageEntries = uploadResults.map(result => ({
                 product_id: productId,
-                image_type: '2D' as const, // assuming 2D as default, you can add logic to determine image type
+                image_type: '2D' as const,
                 image_url: result.secure_url
             }));
 
             await db.insert(productImages).values(imageEntries).returning(productImageFields);
+        }
+
+        if (parsedOptions.length > 0) {
+            await Promise.all(parsedOptions.map(async (option: { option_name: string, config_values: any }) => {
+                const config = await db.select().from(configurationOptions).where(eq(configurationOptions.option_name, option.option_name));
+
+                if (!config[0]?.id) {
+                    const newConfig = await createconfigoption({
+                        product_id: newProduct[0]?.id,
+                        option_name: option.option_name as string
+                    });
+                    await Promise.all(option.config_values.map(async (value: any) => {
+                        const valueConfig = await db.select().from(configurationValues).where(eq(configurationValues.value_name, value.value_name));
+
+                        if (!valueConfig[0]?.id) {
+                            await createConfigValue({
+                                option_id: newConfig[0]?.id,
+                                value_name: value.value_name,
+                                price_adjustment: value.price_adjustment
+                            });
+                        }
+                    }));
+                } else {
+                    await Promise.all(option.config_values.map(async (value: any) => {
+                        const valueConfig = await db.select().from(configurationValues).where(eq(configurationValues.value_name, value.value_name));
+
+                        if (!valueConfig[0]?.id) {
+                            await createConfigValue({
+                                option_id: config[0]?.id,
+                                value_name: value.value_name,
+                                price_adjustment: value.price_adjustment
+                            });
+                        }
+                    }));
+                }
+            }));
         }
 
         res.status(201).json(newProduct);
@@ -183,6 +227,7 @@ export const createProduct = async (req: Request, res: Response) => {
         res.status(500).json({ message: 'Error creating product', error: error.message });
     }
 };
+
 
 
 
