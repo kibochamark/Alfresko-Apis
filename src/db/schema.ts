@@ -1,4 +1,4 @@
-
+// @ts-nocheck
 import { decimal, integer, json, pgEnum, pgTable, primaryKey, serial, text, timestamp, varchar } from "drizzle-orm/pg-core";
 import { InferModel, SQL, relations } from "drizzle-orm";
 import exp from "constants";

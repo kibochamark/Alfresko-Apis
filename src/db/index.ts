@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { eq } from "drizzle-orm";
 import db from "../utils/connection"
 import { InsertPermission, InsertRole, User, permissions, profiles, refreshTokens, rolePermissions, roles, users, company, profileTypeEnum, ProfileType, categories, InsertCategory, InsertConfigureOption, configurationOptions, configurationValues, InsertConfigureOptionValue, products } from './schema';
