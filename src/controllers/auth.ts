@@ -7,7 +7,7 @@ import { createHash } from '../utils/HasherPassword';
 import { Request } from 'express';
 import { blacklistToken } from '../utils/tokenblacklist';
 import { JwtPayload } from 'jsonwebtoken';
-import db from 'utils/connection';
+import db from '../utils/connection';
 import { createCompanywithUser } from '../db/index';
 
 
