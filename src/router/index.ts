@@ -14,6 +14,7 @@ import { newconfigoption, removeoption, retrieveconfigoptions, retrieveoption, u
 import { createConfigValueHandler, deleteConfigValueHandler, getConfigValueByIdHandler,  getConfigValuesHandler, updateConfigValueHandler } from '../controllers/optionvalues';
 import { addProductImage, createProduct, deleteProductById, getAllProducts, getAllProductsByCompanyId, getProductByCompanyId, getProductById, updateProductById } from '../controllers/product';
 import { upload } from '../utils/upload';
+import { newquote, removequote, retrievecquotes, retrievequote, updatequote } from '../controllers/quote';
 
 
 
@@ -81,6 +82,13 @@ routes.get("/getconfigoptionbyproduct", checkTokenBlacklist, authMiddleware, ret
 routes.post("/createconfigoption", checkTokenBlacklist, authMiddleware,newconfigoption)
 routes.delete("/deleteconfigoption", checkTokenBlacklist, authMiddleware, removeoption)
 routes.patch("/updateconfigoption", checkTokenBlacklist, authMiddleware, updateoption)
+
+// quote
+routes.get("/quotes", checkTokenBlacklist, authMiddleware, retrievecquotes)
+routes.get("/:id/quote", checkTokenBlacklist, authMiddleware, retrievequote)
+routes.post("/quote", checkTokenBlacklist, authMiddleware,newquote)
+routes.delete("/:id/quote", checkTokenBlacklist, authMiddleware, removequote)
+routes.put("/quote", checkTokenBlacklist, authMiddleware,updatequote )
 
 
 //config option values

@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { decimal, integer, json, pgEnum, pgTable, primaryKey, serial, text, timestamp, varchar } from "drizzle-orm/pg-core";
+import { boolean, decimal, integer, json, jsonb, pgEnum, pgTable, primaryKey, serial, text, timestamp, varchar } from "drizzle-orm/pg-core";
 import { InferModel, SQL, relations } from "drizzle-orm";
 import exp from "constants";
 
@@ -49,14 +49,14 @@ export const subscriptionEnum = pgEnum('subscriptions_status', ['active', 'inact
 
 
 // companies
-export const company  = pgTable("companies", {
-    id:serial('id').primaryKey(),
-    company_name:text("company_name").notNull(),
-    street_address:text("address1").notNull(),
-    street_address2:text("address2"),
-    location:text("location").notNull(),
-    phone:text("company-telephone").notNull(),
-    email:text("email").notNull(),
+export const company = pgTable("companies", {
+    id: serial('id').primaryKey(),
+    company_name: text("company_name").notNull(),
+    street_address: text("address1").notNull(),
+    street_address2: text("address2"),
+    location: text("location").notNull(),
+    phone: text("company-telephone").notNull(),
+    email: text("email").notNull(),
     created_at: timestamp('created_at').defaultNow(),
     updated_at: timestamp("updated_at").defaultNow().$onUpdate(() => new Date())
 })
@@ -67,7 +67,7 @@ export const subscriptionPlans = pgTable("subscription_plans", {
     description: text('description'),
     price: integer('price').notNull(),
     discount: integer('discount').default(0), // Discount field
-    duration: integer('duration').notNull(), 
+    duration: integer('duration').notNull(),
     created_at: timestamp('created_at').defaultNow(),
     updated_at: timestamp("updated_at").defaultNow().$onUpdate(() => new Date())
 });
@@ -117,17 +117,37 @@ export const products = pgTable("products", {
     id: serial('id').primaryKey(),
     name: text('name').notNull().unique(),
     description: text('description'),
-    category_id:integer('category_id').references(() => categories.id).notNull(),
+    category_id: integer('category_id').references(() => categories.id).notNull(),
     base_price: decimal('base_price').notNull(),
     created_at: timestamp('created_at').defaultNow(),
     updated_at: timestamp("updated_at").defaultNow().$onUpdate(() => new Date())
 });
 
+
+// Quote Table
+export const quote = pgTable("quote", {
+    id: serial("id").primaryKey(), // Ensure the field name is a string
+    name: text("name").notNull(),
+    email: text("email").notNull(),
+    phone: varchar("phone").notNull(),
+    address: text("address").notNull(),
+    dimensions: text("dimensions").notNull(),
+    canopyType: varchar("canopyType").notNull(),
+    rooffeature: text("rooffeature"),
+    wallfeatures: jsonb("wallfeatures").notNull(), // Ensure the name is "wallfeatures" (plural)
+    backside: text("backside"),
+    additionalfeatures: text("additionalfeatures"),
+    installation: boolean("installation").$default(false),
+    created_at: timestamp("created_at").defaultNow(),
+    updated_at: timestamp("updated_at").defaultNow().$onUpdate(() => new Date())
+});
+
+
 //company products
 export const companyProducts = pgTable("company_products", {
     id: serial('id').primaryKey(),
-    company_id:integer('company_id').references(() => company.id).notNull(),
-    product_id:integer('product_id').references(() => products.id).notNull(),
+    company_id: integer('company_id').references(() => company.id).notNull(),
+    product_id: integer('product_id').references(() => products.id).notNull(),
     created_at: timestamp('created_at').defaultNow(),
     updated_at: timestamp("updated_at").defaultNow().$onUpdate(() => new Date())
 });
@@ -195,7 +215,7 @@ export const proposals = pgTable("proposals", {
 // Relations
 export const userRelations = relations(users, ({ one, many }) => ({
     profile: one(profiles),
-    company:one(company),
+    company: one(company),
     role: one(roles),
     refreshTokens: many(refreshTokens)
 }));
@@ -223,7 +243,7 @@ export const rolePermissionRelations = relations(rolePermissions, ({ one }) => (
 export const productRelations = relations(products, ({ many }) => ({
     configuration_options: many(configurationOptions),
     product_images: many(productImages),
-    proposals:many(proposals)
+    proposals: many(proposals)
 }));
 
 export const configurationOptionRelations = relations(configurationOptions, ({ one, many }) => ({
@@ -391,6 +411,10 @@ export type InsertRole = InferModel<typeof roles, 'insert'>;
 // categories
 export type Category = InferModel<typeof categories, 'select'>;
 export type InsertCategory = InferModel<typeof categories, 'insert'>;
+
+// quote
+export type Quote = InferModel<typeof quote, 'select'>;
+export type InsertQuote = InferModel<typeof quote, 'insert'>;
 
 // Define Profile type
 export type Profile = InferModel<typeof profiles>;

@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { eq } from "drizzle-orm";
 import db from "../utils/connection"
-import { InsertPermission, InsertRole, User, permissions, profiles, refreshTokens, rolePermissions, roles, users, company, profileTypeEnum, ProfileType, categories, InsertCategory, InsertConfigureOption, configurationOptions, configurationValues, InsertConfigureOptionValue, products } from './schema';
+import { InsertPermission, InsertRole, User, permissions, profiles, refreshTokens, rolePermissions, roles, users, company, profileTypeEnum, ProfileType, categories, InsertCategory, InsertConfigureOption, configurationOptions, configurationValues, InsertConfigureOptionValue, products, InsertQuote, quote } from './schema';
 import { hashPassword } from '../utils/authenticationUtilities';
 import { createHash } from "../utils/HasherPassword";
 import { and, gte } from "drizzle-orm";
@@ -556,6 +556,30 @@ export const getConfigoptionswithvaluesbyproductid = async(id:number)=>{
 
 
 
+// quotes
+export const createQuote = async (optionvalues:InsertQuote) => {
+    return await db.insert(quote).values(optionvalues);
+};
+
+
+export const getQuotes = async () => {
+    return await db.select().from(quote);
+};
+
+
+export const getQuoteById = async (id:number) => {
+    return await db.select().from(quote).where(eq(quote.id, id));
+};
+
+
+export const updateQuote = async (id:number, updatedValues:InsertQuote) => {
+    return await db.update(quote).set(updatedValues).where(eq(quote.id,id));
+};
+
+
+export const deleteQuote = async (id:number) => {
+    return await db.delete(quote).where(eq(quote.id,id));
+};
 
 
 
