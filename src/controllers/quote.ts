@@ -118,7 +118,7 @@ export const removequote = async (req: Request, res: Response) => {
 
 export const newquote = async (req: Request, res: Response) => {
     try {
-        const { error, value } = createQuoteSchema.validate(req.params, { abortEarly: false });
+        const { error, value } = createQuoteSchema.validate(req.body, { abortEarly: false });
 
         if (error) {
             let statusError = new Error(JSON.stringify(
@@ -148,7 +148,7 @@ export const newquote = async (req: Request, res: Response) => {
 
 export const updatequote= async (req: Request, res: Response) => {
     try {
-        const { error, value } = updateQuoteSchema.validate(req.params, { abortEarly: false });
+        const { error, value } = updateQuoteSchema.validate(req.body, { abortEarly: false });
 
         if (error) {
             let statusError = new Error(JSON.stringify(
