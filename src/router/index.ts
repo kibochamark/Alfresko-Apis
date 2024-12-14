@@ -84,11 +84,11 @@ routes.delete("/deleteconfigoption", checkTokenBlacklist, authMiddleware, remove
 routes.patch("/updateconfigoption", checkTokenBlacklist, authMiddleware, updateoption)
 
 // quote
-routes.get("/quotes", checkTokenBlacklist, authMiddleware, retrievecquotes)
-routes.get("/:id/quote", checkTokenBlacklist, authMiddleware, retrievequote)
-routes.post("/quote", checkTokenBlacklist, authMiddleware,newquote)
-routes.delete("/:id/quote", checkTokenBlacklist, authMiddleware, removequote)
-routes.put("/quote", checkTokenBlacklist, authMiddleware,updatequote )
+routes.get("/quotes", retrievecquotes)
+routes.get("/:id/quote", retrievequote)
+routes.post("/quote", newquote)
+routes.delete("/:id/quote",  removequote)
+routes.put("/quote", updatequote )
 
 
 //config option values
