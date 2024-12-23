@@ -558,8 +558,12 @@ export const getConfigoptionswithvaluesbyproductid = async(id:number)=>{
 
 // quotes
 export const createQuote = async (optionvalues:InsertQuote) => {
-    return await db.insert(quote).values(optionvalues);
+    return await db.insert(quote).values(optionvalues).returning({
+        id:quote.id,
+        status:quote.status
+    });
 };
+
 
 
 export const getQuotes = async () => {
@@ -573,7 +577,19 @@ export const getQuoteById = async (id:number) => {
 
 
 export const updateQuote = async (id:number, updatedValues:InsertQuote) => {
-    return await db.update(quote).set(updatedValues).where(eq(quote.id,id));
+    return await db.update(quote).set(updatedValues).where(eq(quote.id,id)).returning({
+        id:quote.id,
+        status:quote.status
+    });
+};
+
+export const updateQuoteStatus = async (id:number, status:any) => {
+    return await db.update(quote).set({
+        status:status
+    }).where(eq(quote.id,id)).returning({
+        id:quote.id,
+        status:quote.status
+    });
 };
 
 

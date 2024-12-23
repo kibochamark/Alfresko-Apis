@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { categories } from '../db/schema';
-import { createQuote, createcategory, createconfigoption, deleteConfigOption, deleteQuote, getCategories, getCategoryById, getConfigoptionswithvalues, getConfigoptionswithvaluesbyproductid, getQuoteById, getQuotes, getconfigoptionbyproductid, getconfigoptions, updateCategory, updateQuote, updateconfigoption } from '../db';
+import { createQuote, createcategory, createconfigoption, deleteConfigOption, deleteQuote, getCategories, getCategoryById, getConfigoptionswithvalues, getConfigoptionswithvaluesbyproductid, getQuoteById, getQuotes, getconfigoptionbyproductid, getconfigoptions, updateCategory, updateQuote, updateQuoteStatus, updateconfigoption } from '../db';
 import { deleteCategory } from '../db/index';
 import Joi from 'joi';
 
@@ -75,6 +75,26 @@ const updateQuoteSchema = Joi.object({
         "pending"
     )
 })
+
+
+const updateQuoteStatusSchema = Joi.object({
+    id: Joi.number().integer().positive().required(),
+    status: Joi.string().valid(
+        "contacted",
+        "left message",
+        "survey booked",
+        "survey completed",
+        "revised estimate sent",
+        "sale agreed",
+        "invoiced",
+        "payment received",
+        "ordered",
+        "installed",
+        "complete",
+        "pending"
+    ).required()
+})
+
 
 
 export const retrievecquotes = async (req: Request, res: Response) => {
@@ -198,7 +218,7 @@ export const updatequote = async (req: Request, res: Response) => {
             canopyType,
             rooffeature,
             wallfeatures,
-status,
+            status,
             backside,
             additionalfeatures,
             installation
@@ -220,6 +240,44 @@ status,
             installation,
 
         })
+
+        if (!updatedquote) return res.status(400).json({
+            error: "failed to update resource or it does not exist"
+        }).end()
+
+        return res.status(201).json({
+            message: "success",
+            data: updatedquote
+        }).end()
+    } catch (e: any) {
+        return res.status(500).json({
+            error: e.message
+        }).end()
+    }
+
+}
+export const updatequotestatus = async (req: Request, res: Response) => {
+    try {
+        const { error, value } = updateQuoteStatusSchema.validate(req.body, { abortEarly: false });
+
+        if (error) {
+            let statusError = new Error(JSON.stringify(
+                {
+                    error: error.details.map(detail => detail.message),
+                }
+            ))
+            throw statusError
+        }
+
+
+        const {
+            id,
+
+            status
+        } = value
+
+
+        const updatedquote = await updateQuoteStatus(parseInt(id), status)
 
         if (!updatedquote) return res.status(400).json({
             error: "failed to update resource or it does not exist"
