@@ -5,7 +5,7 @@ import { InsertPermission, InsertRole, User, permissions, profiles, refreshToken
 import { hashPassword } from '../utils/authenticationUtilities';
 import { createHash } from "../utils/HasherPassword";
 import { and, gte } from "drizzle-orm";
-import { subscriptionPlans, subscriptions, InsertSubscriptionPlan, InsertSubscription } from './schema';
+import { subscriptionPlans, subscriptions, InsertSubscriptionPlan, InsertSubscription, quoteStatusEnum } from './schema';
 
 // Create a new subscription plan
 export const createSubscriptionPlan = async (plan: InsertSubscriptionPlan) => {
@@ -583,7 +583,7 @@ export const updateQuote = async (id:number, updatedValues:InsertQuote) => {
     });
 };
 
-export const updateQuoteStatus = async (id:number, status:any) => {
+export const updateQuoteStatus = async (id:number, status:quoteStatusEnum) => {
     return await db.update(quote).set({
         status:status
     }).where(eq(quote.id,id)).returning({
