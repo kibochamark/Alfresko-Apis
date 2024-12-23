@@ -89,7 +89,7 @@ routes.get("/:id/quote", retrievequote)
 routes.post("/quote", newquote)
 routes.delete("/:id/quote", removequote)
 routes.put("/quote", updatequote)
-routes.put("/quotebystatus", updatequotestatus)
+routes.put("/quotestatus", updatequotestatus)
 
 
 //config option values
