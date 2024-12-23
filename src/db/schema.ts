@@ -124,6 +124,21 @@ export const products = pgTable("products", {
 });
 
 
+
+export const quoteStatusEnum = pgEnum("status", ["contacted",
+    "left message",
+    "survey booked",
+    "survey completed",
+    "revised estimate sent",
+    "sale agreed",
+    "invoiced",
+    "payment received",
+    "ordered",
+    "installed",
+    "complete",
+    "pending"
+]);
+
 // Quote Table
 export const quote = pgTable("quote", {
     id: serial("id").primaryKey(), // Ensure the field name is a string
@@ -136,6 +151,7 @@ export const quote = pgTable("quote", {
     rooffeature: text("rooffeature"),
     wallfeatures: jsonb("wallfeatures").notNull(), // Ensure the name is "wallfeatures" (plural)
     backside: text("backside"),
+    status: quoteStatusEnum("status").$default("pending"),
     additionalfeatures: text("additionalfeatures"),
     installation: boolean("installation").$default(false),
     created_at: timestamp("created_at").defaultNow(),

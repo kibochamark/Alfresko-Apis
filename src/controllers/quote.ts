@@ -46,6 +46,20 @@ const updateQuoteSchema = Joi.object({
     backside: Joi.string().required(),
     additionalfeatures: Joi.string().required(),
     installation: Joi.boolean().default(false),
+    status: Joi.string().valid(
+        "contacted",
+        "left message",
+        "survey booked",
+        "survey completed",
+        "revised estimate sent",
+        "sale agreed",
+        "invoiced",
+        "payment received",
+        "ordered",
+        "installed",
+        "complete",
+        "pending"
+    )
 })
 
 
@@ -146,7 +160,7 @@ export const newquote = async (req: Request, res: Response) => {
 
 }
 
-export const updatequote= async (req: Request, res: Response) => {
+export const updatequote = async (req: Request, res: Response) => {
     try {
         const { error, value } = updateQuoteSchema.validate(req.body, { abortEarly: false });
 
@@ -170,7 +184,7 @@ export const updatequote= async (req: Request, res: Response) => {
             canopyType,
             rooffeature,
             wallfeatures,
-
+status,
             backside,
             additionalfeatures,
             installation
@@ -186,8 +200,8 @@ export const updatequote= async (req: Request, res: Response) => {
             canopyType,
             rooffeature,
             wallfeatures,
-
             backside,
+            status,
             additionalfeatures,
             installation,
 
@@ -201,7 +215,7 @@ export const updatequote= async (req: Request, res: Response) => {
             message: "success",
             data: updatedquote
         }).end()
-    } catch(e:any) {
+    } catch (e: any) {
         return res.status(500).json({
             error: e.message
         }).end()
