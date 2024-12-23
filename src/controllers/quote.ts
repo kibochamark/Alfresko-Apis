@@ -27,6 +27,20 @@ const createQuoteSchema = Joi.object({
     backside: Joi.string().required(),
     additionalfeatures: Joi.string().required(),
     installation: Joi.boolean().default(false),
+    status: Joi.string().valid(
+        "contacted",
+        "left message",
+        "survey booked",
+        "survey completed",
+        "revised estimate sent",
+        "sale agreed",
+        "invoiced",
+        "payment received",
+        "ordered",
+        "installed",
+        "complete",
+        "pending"
+    ).default("pending")
 })
 const updateQuoteSchema = Joi.object({
     id: Joi.number().integer().positive().required(),

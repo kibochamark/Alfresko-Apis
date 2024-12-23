@@ -151,7 +151,7 @@ export const quote = pgTable("quote", {
     rooffeature: text("rooffeature"),
     wallfeatures: jsonb("wallfeatures").notNull(), // Ensure the name is "wallfeatures" (plural)
     backside: text("backside"),
-    status: quoteStatusEnum("status").$default("pending"),
+    status: quoteStatusEnum("status").notNull(),
     additionalfeatures: text("additionalfeatures"),
     installation: boolean("installation").$default(false),
     created_at: timestamp("created_at").defaultNow(),
