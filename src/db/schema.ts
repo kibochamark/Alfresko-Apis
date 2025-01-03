@@ -155,7 +155,8 @@ export const quote = pgTable("quote", {
     additionalfeatures: text("additionalfeatures"),
     installation: boolean("installation").$default(false),
     created_at: timestamp("created_at").defaultNow(),
-    updated_at: timestamp("updated_at").defaultNow().$onUpdate(() => new Date())
+    updated_at: timestamp("updated_at").defaultNow().$onUpdate(() => new Date()),
+    price:decimal('price').notNull().default(0.00)
 });
 
 
