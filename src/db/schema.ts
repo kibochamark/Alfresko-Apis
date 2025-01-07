@@ -156,7 +156,9 @@ export const quote = pgTable("quote", {
     installation: boolean("installation").$default(false),
     created_at: timestamp("created_at").defaultNow(),
     updated_at: timestamp("updated_at").defaultNow().$onUpdate(() => new Date()),
-    price:decimal('price').notNull().default(0.00)
+    price:decimal('price').notNull().default(0.00),
+    roofBlinds:varchar("roofBlinds"),
+    budget:decimal('budget').notNull().default(0.00)
 });
 
 

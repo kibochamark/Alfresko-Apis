@@ -19,6 +19,8 @@ const createQuoteSchema = Joi.object({
     price:Joi.number().required(),
     canopyType: Joi.string().required(),
     rooffeature: Joi.string().required(),
+    roofBlinds: Joi.string().optional(),
+    budget:Joi.number().required(),
     wallfeatures: Joi.array().items(
         Joi.object({
             name: Joi.string().required(),
@@ -53,6 +55,8 @@ const updateQuoteSchema = Joi.object({
     dimensions: Joi.string().required(),
     canopyType: Joi.string().required(),
     rooffeature: Joi.string().required(),
+    roofBlinds: Joi.string().optional(),
+    budget:Joi.number().required(),
     wallfeatures: Joi.array().items(
         Joi.object({
             name: Joi.string().required(),
