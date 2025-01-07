@@ -226,6 +226,8 @@ export const updatequote = async (req: Request, res: Response) => {
             wallfeatures,
             price,
             status,
+            budget,
+            roofBlinds,
             backside,
             additionalfeatures,
             installation
@@ -240,6 +242,8 @@ export const updatequote = async (req: Request, res: Response) => {
             address,
             dimensions,
             canopyType,
+            budget,
+            roofBlinds,
             rooffeature,
             wallfeatures,
             backside,
