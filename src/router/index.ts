@@ -15,6 +15,7 @@ import { createConfigValueHandler, deleteConfigValueHandler, getConfigValueByIdH
 import { addProductImage, createProduct, deleteProductById, getAllProducts, getAllProductsByCompanyId, getProductByCompanyId, getProductById, updateProductById } from '../controllers/product';
 import { upload } from '../utils/upload';
 import { newquote, removequote, retrievecquotes, retrievequote, updatequote, updatequotestatus } from '../controllers/quote';
+import { createConfigSettingsHandler, deleteConfigSettingsHandler, getConfigSettingByIdHandler, getConfigSettingsHandler, updateConfigSettingsHandler } from 'controllers/settings';
 
 
 
@@ -90,6 +91,16 @@ routes.post("/quote", newquote)
 routes.delete("/:id/quote", removequote)
 routes.put("/quote", updatequote)
 routes.put("/quotestatus", updatequotestatus)
+
+
+//config settings
+
+routes.get("/configsettings",checkTokenBlacklist, authMiddleware, getConfigSettingsHandler)
+routes.get("/:id/configsetting",checkTokenBlacklist, authMiddleware, getConfigSettingByIdHandler)
+routes.post("/configsettings", checkTokenBlacklist, authMiddleware,createConfigSettingsHandler)
+routes.delete("/:id/configsetting",checkTokenBlacklist, authMiddleware, deleteConfigSettingsHandler)
+routes.put("/:id/configsetting",checkTokenBlacklist, authMiddleware, updateConfigSettingsHandler)
+
 
 
 //config option values

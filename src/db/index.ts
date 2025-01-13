@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { eq } from "drizzle-orm";
 import db from "../utils/connection"
-import { InsertPermission, InsertRole, User, permissions, profiles, refreshTokens, rolePermissions, roles, users, company, profileTypeEnum, ProfileType, categories, InsertCategory, InsertConfigureOption, configurationOptions, configurationValues, InsertConfigureOptionValue, products, InsertQuote, quote } from './schema';
+import { InsertPermission, InsertRole, User, permissions, profiles, refreshTokens, rolePermissions, roles, users, company, profileTypeEnum, ProfileType, categories, InsertCategory, InsertConfigureOption, configurationOptions, configurationValues, InsertConfigureOptionValue, products, InsertQuote, quote, InsertConfig, ConfigSettings } from './schema';
 import { hashPassword } from '../utils/authenticationUtilities';
 import { createHash } from "../utils/HasherPassword";
 import { and, gte } from "drizzle-orm";
@@ -650,6 +650,51 @@ export const updateConfigValue = async (id:number, updatedValues:InsertConfigure
 
 export const deleteConfigValue = async (id:number) => {
     return await db.delete(configurationValues).where(eq(configurationValues.id,id));
+};
+
+
+// config settings
+export const createConfigSettings = async (optionvalues:InsertConfig) => {
+    return await db.insert(ConfigSettings).values(optionvalues).returning({
+        id: ConfigSettings.id,
+        priceToggle: ConfigSettings.priceToggle,
+        created_at: ConfigSettings.created_at,
+        updated_at: ConfigSettings.updated_at,
+    });
+};
+
+
+export const getConfigSettings = async () => {
+    return await db.select({
+        id: ConfigSettings.id,
+        priceToggle: ConfigSettings.priceToggle,
+        created_at: ConfigSettings.created_at,
+        updated_at: ConfigSettings.updated_at,
+    }).from(ConfigSettings);
+};
+
+
+export const getConfigSettingsById = async (id:number) => {
+    return await db.select({
+        id: ConfigSettings.id,
+        priceToggle: ConfigSettings.priceToggle,
+        created_at: ConfigSettings.created_at,
+        updated_at: ConfigSettings.updated_at,
+    }).from(ConfigSettings).where(eq(ConfigSettings.id, id));
+};
+
+
+export const updateConfigSettings = async (id:number, updatedValues:InsertConfig) => {
+    return await db.update(ConfigSettings).set(updatedValues).where(eq(ConfigSettings.id,id)).returning({
+        id: ConfigSettings.id,
+        priceToggle: ConfigSettings.priceToggle,
+        updated_at: ConfigSettings.updated_at,
+    });
+};
+
+
+export const deleteConfigSettings = async (id:number) => {
+    return await db.delete(ConfigSettings).where(eq(ConfigSettings.id,id));
 };
 
 

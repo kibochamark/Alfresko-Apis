@@ -230,6 +230,15 @@ export const proposals = pgTable("proposals", {
 });
 
 
+// configuration setting
+export const ConfigSettings = pgTable("configsettings", {
+    id: serial('id').primaryKey(),
+    priceToggle:boolean("pricetoggle").$default(false),
+    created_at: timestamp('created_at').defaultNow(),
+    updated_at: timestamp('updated_at').defaultNow().$onUpdate(() => new Date())
+})
+
+
 
 // Relations
 export const userRelations = relations(users, ({ one, many }) => ({
@@ -344,6 +353,9 @@ export type SubscriptionPlan = InferModel<typeof subscriptionPlans>;
 export type InsertSubscriptionPlan = InferModel<typeof subscriptionPlans, 'insert'>;
 export type Subscription = InferModel<typeof subscriptions>;
 export type InsertSubscription = InferModel<typeof subscriptions, 'insert'>;
+
+export type config = InferModel<typeof ConfigSettings>;
+export type InsertConfig = InferModel<typeof ConfigSettings, 'insert'>;
 
 
 // export const posts = pgTable("posts", {
