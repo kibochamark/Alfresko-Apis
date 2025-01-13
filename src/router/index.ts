@@ -15,7 +15,7 @@ import { createConfigValueHandler, deleteConfigValueHandler, getConfigValueByIdH
 import { addProductImage, createProduct, deleteProductById, getAllProducts, getAllProductsByCompanyId, getProductByCompanyId, getProductById, updateProductById } from '../controllers/product';
 import { upload } from '../utils/upload';
 import { newquote, removequote, retrievecquotes, retrievequote, updatequote, updatequotestatus } from '../controllers/quote';
-import { createConfigSettingsHandler, deleteConfigSettingsHandler, getConfigSettingByIdHandler, getConfigSettingsHandler, updateConfigSettingsHandler } from 'controllers/settings';
+import { createConfigSettingsHandler, deleteConfigSettingsHandler, getConfigSettingByIdHandler, getConfigSettingsHandler, updateConfigSettingsHandler } from '../controllers/settings';
 
 
 
