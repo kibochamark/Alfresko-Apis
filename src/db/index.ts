@@ -744,8 +744,10 @@ export const getConfigSettingsById = async (id: number) => {
 };
 
 
-export const updateConfigSettings = async (id: number, updatedValues: InsertConfig) => {
-    return await db.update(ConfigSettings).set(updatedValues).where(eq(ConfigSettings.id, id)).returning({
+export const updateConfigSettings = async (id: number, toggle:boolean) => {
+    return await db.update(ConfigSettings).set({
+        priceToggle:toggle
+    }).where(eq(ConfigSettings.id, id)).returning({
         id: ConfigSettings.id,
         priceToggle: ConfigSettings.priceToggle,
         updated_at: ConfigSettings.updated_at,
