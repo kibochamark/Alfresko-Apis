@@ -7,6 +7,16 @@ import Joi from 'joi';
 const ConfigSettingsSchema = Joi.object({
     priceToggle: Joi.boolean().required()
 })
+const ConfigSettingsUpdateFetchSchema = Joi.object({
+    id: Joi.number().required(),
+    priceToggle: Joi.boolean().required()
+})
+
+const ConfigSettingsFetchSchema = Joi.object({
+    id: Joi.number().required(),
+  
+})
+
 
 export const createConfigSettingsHandler = async (req: Request, res: Response) => {
     try {
@@ -78,12 +88,19 @@ export const getConfigSettingsHandler = async (req: Request, res: Response) => {
 
 export const getConfigSettingByIdHandler = async (req: Request, res: Response) => {
     try {
-        const id = req.query.id as string;
-        if (!id) {
+        const { error, value } = ConfigSettingsFetchSchema.validate(req.params, {
+            abortEarly: false,
+        });
+
+        if (error) {
+
+
             return res.status(400).json({
-                error: "id missing in query"
-            }).end()
+                error: error.details.map((detail) => detail.message),
+            })
         }
+
+
 
         const user = req.user as any
 
@@ -95,6 +112,7 @@ export const getConfigSettingByIdHandler = async (req: Request, res: Response) =
             }).end()
         }
 
+        const {id}= value
 
         const configValue = await getConfigSettingsById(parseInt(id, 10));
         if (!configValue) {
@@ -109,11 +127,16 @@ export const getConfigSettingByIdHandler = async (req: Request, res: Response) =
 
 export const updateConfigSettingsHandler = async (req: Request, res: Response) => {
     try {
-        const id = req.query.id as string;
-        if (!id) {
+        const { error, value } = ConfigSettingsUpdateFetchSchema.validate(req.body, {
+            abortEarly: false,
+        });
+
+        if (error) {
+
+
             return res.status(400).json({
-                error: "id missing in query"
-            }).end()
+                error: error.details.map((detail) => detail.message),
+            })
         }
 
 
@@ -128,8 +151,8 @@ export const updateConfigSettingsHandler = async (req: Request, res: Response) =
         }
 
 
-        const updatedValues = req.body;
-        const updatedConfigValue = await updateConfigSettings(parseInt(id, 10), updatedValues);
+        const {id, priceToggle} = value;
+        const updatedConfigValue = await updateConfigSettings(parseInt(id, 10), priceToggle);
         if (!updatedConfigValue) {
             return res.status(404).json({ error: "Config setting not found" }).end();
         }
@@ -143,7 +166,19 @@ export const updateConfigSettingsHandler = async (req: Request, res: Response) =
 
 export const deleteConfigSettingsHandler = async (req: Request, res: Response) => {
     try {
-        const id = req.query.id as string;
+        const { error, value } = ConfigSettingsFetchSchema.validate(req.params, {
+            abortEarly: false,
+        });
+
+        if (error) {
+
+
+            return res.status(400).json({
+                error: error.details.map((detail) => detail.message),
+            })
+        }
+
+        const {id}= value
 
         const user = req.user as any
 

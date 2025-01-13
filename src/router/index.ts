@@ -99,7 +99,7 @@ routes.get("/configsettings",checkTokenBlacklist, authMiddleware, getConfigSetti
 routes.get("/:id/configsetting",checkTokenBlacklist, authMiddleware, getConfigSettingByIdHandler)
 routes.post("/configsettings", checkTokenBlacklist, authMiddleware,createConfigSettingsHandler)
 routes.delete("/:id/configsetting",checkTokenBlacklist, authMiddleware, deleteConfigSettingsHandler)
-routes.put("/:id/configsetting",checkTokenBlacklist, authMiddleware, updateConfigSettingsHandler)
+routes.put("/configsetting",checkTokenBlacklist, authMiddleware, updateConfigSettingsHandler)
 
 
 
