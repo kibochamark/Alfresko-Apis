@@ -439,7 +439,7 @@ export const getCategories = async () => {
     return await db.select({ id: categories.id, name: categories.name, description: categories.description, created_at: categories.created_at }).from(categories)
 }
 
-export const getCategoryById = async (id:number) => {
+export const getCategoryById = async (id: number) => {
     return await db.select({ id: categories.id, name: categories.name, description: categories.description, created_at: categories.created_at }).from(categories).where(eq(categories.id, id))
 }
 
@@ -454,16 +454,16 @@ export const createcategory = async (category: InsertCategory) => {
 }
 
 
-export const updateCategory = async (category: InsertCategory, id:number)=>{
+export const updateCategory = async (category: InsertCategory, id: number) => {
 
     return await db.update(categories).set(category).where(eq(categories.id, id)).returning({
-        id:categories.id, name:categories.name, description:categories.description, updated_at:categories.updated_at
+        id: categories.id, name: categories.name, description: categories.description, updated_at: categories.updated_at
     })
 
 }
 
 
-export const deleteCategory = async (id:number)=>{
+export const deleteCategory = async (id: number) => {
     return await db.delete(categories).where(eq(categories.id, id))
 }
 
@@ -472,83 +472,83 @@ export const deleteCategory = async (id:number)=>{
 // configure option functions
 
 
-export const createconfigoption = async(option:InsertConfigureOption)=>{
+export const createconfigoption = async (option: InsertConfigureOption) => {
     return await db.insert(configurationOptions).values(option).returning({
-        id:configurationOptions.id,
-        name:configurationOptions.option_name,
-        product_id:configurationOptions.product_id,
-        created_at:configurationOptions.created_at
+        id: configurationOptions.id,
+        name: configurationOptions.option_name,
+        product_id: configurationOptions.product_id,
+        created_at: configurationOptions.created_at
     })
 }
 
 
 
-export const updateconfigoption = async(option:{
-    option_name:string
-}, id:number)=>{
+export const updateconfigoption = async (option: {
+    option_name: string
+}, id: number) => {
     return await db.update(configurationOptions).set(option).returning({
-        id:configurationOptions.id,
-        name:configurationOptions.option_name,
-        product_id:configurationOptions.product_id,
-        updated_at:configurationOptions.updated_at
+        id: configurationOptions.id,
+        name: configurationOptions.option_name,
+        product_id: configurationOptions.product_id,
+        updated_at: configurationOptions.updated_at
     }).where(eq(configurationOptions.id, id))
 }
 
 
 
-export const getconfigoptions = async()=>{
+export const getconfigoptions = async () => {
     return await db.select({
-        id:configurationOptions.id,
-        name:configurationOptions.option_name,
-        product_id:configurationOptions.product_id,
-        updated_at:configurationOptions.updated_at
+        id: configurationOptions.id,
+        name: configurationOptions.option_name,
+        product_id: configurationOptions.product_id,
+        updated_at: configurationOptions.updated_at
     }).from(configurationOptions)
 }
 
 
-export const getconfigoptionbyid = async(id:number)=>{
+export const getconfigoptionbyid = async (id: number) => {
     return await db.select({
-        id:configurationOptions.id,
-        name:configurationOptions.option_name,
-        product_id:configurationOptions.product_id,
-        updated_at:configurationOptions.updated_at
+        id: configurationOptions.id,
+        name: configurationOptions.option_name,
+        product_id: configurationOptions.product_id,
+        updated_at: configurationOptions.updated_at
     }).from(configurationOptions).where(eq(configurationOptions.id, id))
 }
 
-export const getconfigoptionbyproductid = async(id:number)=>{
+export const getconfigoptionbyproductid = async (id: number) => {
     return await db.select({
-        id:configurationOptions.id,
-        name:configurationOptions.option_name,
-        product_id:configurationOptions.product_id,
-        updated_at:configurationOptions.updated_at
+        id: configurationOptions.id,
+        name: configurationOptions.option_name,
+        product_id: configurationOptions.product_id,
+        updated_at: configurationOptions.updated_at
     }).from(configurationOptions).where(eq(configurationOptions.product_id, id))
 }
 
-export const deleteConfigOption = async (id:number)=>{
+export const deleteConfigOption = async (id: number) => {
     return await db.delete(configurationOptions).where(eq(configurationOptions.id, id))
 }
 
 
-export const getConfigoptionswithvalues = async()=>{
+export const getConfigoptionswithvalues = async () => {
     return await db.query.configurationOptions.findMany({
-        with:{
-            configuration_values:true
+        with: {
+            configuration_values: true
         }
     })
 }
-export const getConfigoptionswithvaluesbyid = async(id:number)=>{
+export const getConfigoptionswithvaluesbyid = async (id: number) => {
     return await db.query.configurationOptions.findMany({
-        where:(configurationOptions, { eq }) => eq(configurationOptions.id, id),
-        with:{
-            configuration_values:true
+        where: (configurationOptions, { eq }) => eq(configurationOptions.id, id),
+        with: {
+            configuration_values: true
         }
     })
 }
-export const getConfigoptionswithvaluesbyproductid = async(id:number)=>{
+export const getConfigoptionswithvaluesbyproductid = async (id: number) => {
     return await db.query.configurationOptions.findMany({
-        where:(configurationOptions, { eq }) => eq(configurationOptions.product_id, id),
-        with:{
-            configuration_values:true
+        where: (configurationOptions, { eq }) => eq(configurationOptions.product_id, id),
+        with: {
+            configuration_values: true
         }
     })
 }
@@ -557,51 +557,111 @@ export const getConfigoptionswithvaluesbyproductid = async(id:number)=>{
 
 
 // quotes
-export const createQuote = async (optionvalues:InsertQuote) => {
+export const createQuote = async (optionvalues: InsertQuote) => {
     return await db.insert(quote).values(optionvalues).returning({
-        id:quote.id,
-        status:quote.status
+        id: quote.id,
+        status: quote.status
     });
 };
 
 
 
-export const getQuotes = async () => {
-    return await db.select().from(quote);
+export const getQuotes = async (priceToggled: boolean) => {
+    let ResponseBody = {
+        id: quote.id,
+
+        name: quote.name,
+        email: quote.email,
+        phone: quote.phone,
+        address: quote.address,
+        dimensions: quote.dimensions,
+        canopyType: quote.canopyType,
+        rooffeature: quote.rooffeature,
+        wallfeatures: quote.wallfeatures,
+        backside: quote.backside,
+        status: quote.status,
+        additionalfeatures: quote.additionalfeatures,
+        installation: quote.installation,
+        created_at: quote.created_at,
+        updated_at: quote.updated_at,
+
+        roofBlinds: quote.roofBlinds,
+        budget: quote.budget,
+
+
+    }
+
+    if (priceToggled) {
+        ResponseBody["price"] = quote.price
+    }
+
+    return await db.select({
+        ...ResponseBody
+    }).from(quote);
 };
 
 
-export const getQuoteById = async (id:number) => {
-    return await db.select().from(quote).where(eq(quote.id, id));
+export const getQuoteById = async (id: number, priceToggled:boolean) => {
+    let ResponseBody = {
+        id: quote.id,
+
+        name: quote.name,
+        email: quote.email,
+        phone: quote.phone,
+        address: quote.address,
+        dimensions: quote.dimensions,
+        canopyType: quote.canopyType,
+        rooffeature: quote.rooffeature,
+        wallfeatures: quote.wallfeatures,
+        backside: quote.backside,
+        status: quote.status,
+        additionalfeatures: quote.additionalfeatures,
+        installation: quote.installation,
+        created_at: quote.created_at,
+        updated_at: quote.updated_at,
+
+        roofBlinds: quote.roofBlinds,
+        budget: quote.budget,
+
+
+    }
+
+    if (priceToggled) {
+        ResponseBody["price"] = quote.price
+    }
+
+    return await db.select({
+        ...ResponseBody
+    }).from(quote).where(eq(quote.id, id));
 };
 
 
-export const updateQuote = async (id:number, updatedValues:InsertQuote) => {
-    return await db.update(quote).set(updatedValues).where(eq(quote.id,id)).returning({
-        id:quote.id,
-        status:quote.status
+export const updateQuote = async (id: number, updatedValues: InsertQuote) => {
+    return await db.update(quote).set(updatedValues).where(eq(quote.id, id)).returning({
+        id: quote.id,
+        status: quote.status
     });
 };
 
-export const updateQuoteStatus = async (id:number, status:quoteStatusEnum) => {
+export const updateQuoteStatus = async (id: number, status: quoteStatusEnum) => {
     return await db.update(quote).set({
-        status:status
-    }).where(eq(quote.id,id)).returning({
-        id:quote.id,
-        status:quote.status
+        status: status
+    }).where(eq(quote.id, id)).returning({
+        id: quote.id,
+        status: quote.status
     });
 };
 
 
-export const deleteQuote = async (id:number) => {
-    return await db.delete(quote).where(eq(quote.id,id));
+export const deleteQuote = async (id: number) => {
+    return await db.delete(quote).where(eq(quote.id, id));
 };
 
 
 
 
 //config values
-export const createConfigValue = async (optionvalues:InsertConfigureOptionValue) => {
+export const createConfigValue = async (optionvalues: InsertConfigureOptionValue) => {
     return await db.insert(configurationValues).values(optionvalues).returning({
         id: configurationValues.id,
         option_id: configurationValues.option_id,
@@ -625,7 +685,7 @@ export const getConfigValues = async () => {
 };
 
 
-export const getConfigValueById = async (id:number) => {
+export const getConfigValueById = async (id: number) => {
     return await db.select({
         id: configurationValues.id,
         option_id: configurationValues.option_id,
@@ -637,8 +697,8 @@ export const getConfigValueById = async (id:number) => {
 };
 
 
-export const updateConfigValue = async (id:number, updatedValues:InsertConfigureOptionValue) => {
-    return await db.update(configurationValues).set(updatedValues).where(eq(configurationValues.id,id)).returning({
+export const updateConfigValue = async (id: number, updatedValues: InsertConfigureOptionValue) => {
+    return await db.update(configurationValues).set(updatedValues).where(eq(configurationValues.id, id)).returning({
         id: configurationValues.id,
         option_id: configurationValues.option_id,
         value_name: configurationValues.value_name,
@@ -648,13 +708,13 @@ export const updateConfigValue = async (id:number, updatedValues:InsertConfigure
 };
 
 
-export const deleteConfigValue = async (id:number) => {
-    return await db.delete(configurationValues).where(eq(configurationValues.id,id));
+export const deleteConfigValue = async (id: number) => {
+    return await db.delete(configurationValues).where(eq(configurationValues.id, id));
 };
 
 
 // config settings
-export const createConfigSettings = async (optionvalues:InsertConfig) => {
+export const createConfigSettings = async (optionvalues: InsertConfig) => {
     return await db.insert(ConfigSettings).values(optionvalues).returning({
         id: ConfigSettings.id,
         priceToggle: ConfigSettings.priceToggle,
@@ -674,7 +734,7 @@ export const getConfigSettings = async () => {
 };
 
 
-export const getConfigSettingsById = async (id:number) => {
+export const getConfigSettingsById = async (id: number) => {
     return await db.select({
         id: ConfigSettings.id,
         priceToggle: ConfigSettings.priceToggle,
@@ -684,8 +744,8 @@ export const getConfigSettingsById = async (id:number) => {
 };
 
 
-export const updateConfigSettings = async (id:number, updatedValues:InsertConfig) => {
-    return await db.update(ConfigSettings).set(updatedValues).where(eq(ConfigSettings.id,id)).returning({
+export const updateConfigSettings = async (id: number, updatedValues: InsertConfig) => {
+    return await db.update(ConfigSettings).set(updatedValues).where(eq(ConfigSettings.id, id)).returning({
         id: ConfigSettings.id,
         priceToggle: ConfigSettings.priceToggle,
         updated_at: ConfigSettings.updated_at,
@@ -693,26 +753,26 @@ export const updateConfigSettings = async (id:number, updatedValues:InsertConfig
 };
 
 
-export const deleteConfigSettings = async (id:number) => {
-    return await db.delete(ConfigSettings).where(eq(ConfigSettings.id,id));
+export const deleteConfigSettings = async (id: number) => {
+    return await db.delete(ConfigSettings).where(eq(ConfigSettings.id, id));
 };
 
 
 
 export const retrieveproducts = async () => {
     return await db.query.products.findMany({
-        with:{
-            configuration_options:{
-              with:{
-                configuration_values: true
+        with: {
+            configuration_options: {
+                with: {
+                    configuration_values: true
 
 
                 }
             },
-            product_images:{
-                columns:{
-                    image_url:true,
-                    image_type:true
+            product_images: {
+                columns: {
+                    image_url: true,
+                    image_type: true
                 }
             }
 

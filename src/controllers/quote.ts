@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { categories } from '../db/schema';
-import { createQuote, createcategory, createconfigoption, deleteConfigOption, deleteQuote, getCategories, getCategoryById, getConfigoptionswithvalues, getConfigoptionswithvaluesbyproductid, getQuoteById, getQuotes, getconfigoptionbyproductid, getconfigoptions, updateCategory, updateQuote, updateQuoteStatus, updateconfigoption } from '../db';
+import { createQuote, createcategory, createconfigoption, deleteConfigOption, deleteQuote, getCategories, getCategoryById, getConfigSettings, getConfigoptionswithvalues, getConfigoptionswithvaluesbyproductid, getQuoteById, getQuotes, getconfigoptionbyproductid, getconfigoptions, updateCategory, updateQuote, updateQuoteStatus, updateconfigoption } from '../db';
 import { deleteCategory } from '../db/index';
 import Joi from 'joi';
 
@@ -106,7 +106,11 @@ const updateQuoteStatusSchema = Joi.object({
 export const retrievecquotes = async (req: Request, res: Response) => {
     try {
 
-        const retrievedquotes = await getQuotes()
+        const configsettings = await getConfigSettings()
+
+        let priceToggled:boolean = configsettings[0]?.priceToggle ?? false
+
+        const retrievedquotes = await getQuotes(priceToggled)
         return res.status(200).json(retrievedquotes).end()
     } catch {
         return res.status(500).json({
@@ -131,7 +135,11 @@ export const retrievequote = async (req: Request, res: Response) => {
 
 
         const { id } = value;
-        const retrievequote = await getQuoteById(parseInt(id))
+        const configsettings = await getConfigSettings()
+
+        let priceToggled:boolean = configsettings[0]?.priceToggle ?? false
+
+        const retrievequote = await getQuoteById(parseInt(id), priceToggled)
         return res.status(200).json(retrievequote).end()
     } catch (e: any) {
         return res.status(500).json({
