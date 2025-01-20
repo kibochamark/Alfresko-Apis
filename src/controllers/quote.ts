@@ -3,7 +3,7 @@ import { categories } from '../db/schema';
 import { createQuote, createcategory, createconfigoption, deleteConfigOption, deleteQuote, getCategories, getCategoryById, getConfigSettings, getConfigoptionswithvalues, getConfigoptionswithvaluesbyproductid, getQuoteById, getQuotes, getconfigoptionbyproductid, getconfigoptions, updateCategory, updateQuote, updateQuoteStatus, updateconfigoption } from '../db';
 import { deleteCategory } from '../db/index';
 import Joi from 'joi';
-import { sendQuoteNotification } from 'utils/sendMail';
+import { sendQuoteNotification } from '../utils/sendMail';
 
 
 const getSchema = Joi.object({
