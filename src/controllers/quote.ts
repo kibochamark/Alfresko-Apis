@@ -198,7 +198,7 @@ export const newquote = async (req: Request, res: Response) => {
             error: "failed to create resource"
         }).end()
         // Send OTP code to user's email
-        await sendQuoteNotification("kibochamark@gmail.com", createdquote[0]);
+        await sendQuoteNotification("info@alfresko.co.uk", createdquote[0]);
 
         return res.status(201).json({
             message: "success",
