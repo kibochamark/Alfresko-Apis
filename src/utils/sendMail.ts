@@ -28,6 +28,7 @@ const sendEmail = async (email: string, token: string) => {
 
 
 export const sendQuoteNotification = async (adminEmail: string, quoteDetails: any) => {
+    console.log(quoteDetails, "qty")
     const logoUrl = 'https://path/logo.png'; // Replace with your logo 
     const { name, email, phone, dimensions, price, canopyType, rooffeature, additionalfeatures, budget, wallfeatures } = quoteDetails;
 
@@ -50,8 +51,8 @@ export const sendQuoteNotification = async (adminEmail: string, quoteDetails: an
                 <p><strong>Canopy Type:</strong> ${canopyType}</p>
                 <p><strong>Roof Material:</strong> ${rooffeature}</p>
                 <p><strong>Additional Features:</strong> ${additionalfeatures}</p>
-                <p><strong>Budget:</strong> GBP ${budget.toLocaleString()}</p>
-                <p><strong>Estimated Price:</strong> UGX ${price.toLocaleString()}</p>
+                <p><strong>Budget:</strong> GBP ${budget}</p>
+                <p><strong>Estimated Price:</strong> UGX ${price}</p>
                 <h3>Wall Features:</h3>
                 <ul>${wallFeaturesList}</ul>
                 <p>For further details, please check the admin portal.</p>
