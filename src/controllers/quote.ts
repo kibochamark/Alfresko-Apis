@@ -194,7 +194,7 @@ export const newquote = async (req: Request, res: Response) => {
 
 
         const createdquote = await createQuote(value)
-        if (!createQuote) return res.status(400).json({
+        if (!createdquote) return res.status(400).json({
             error: "failed to create resource"
         }).end()
         // Send OTP code to user's email
