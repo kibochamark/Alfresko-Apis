@@ -3,7 +3,7 @@ import { categories } from '../db/schema';
 import { createQuote, createcategory, createconfigoption, deleteConfigOption, deleteQuote, getCategories, getCategoryById, getConfigSettings, getConfigoptionswithvalues, getConfigoptionswithvaluesbyproductid, getQuoteById, getQuotes, getconfigoptionbyproductid, getconfigoptions, updateCategory, updateQuote, updateQuoteStatus, updateconfigoption } from '../db';
 import { deleteCategory } from '../db/index';
 import Joi from 'joi';
-import { sendQuoteNotification } from '../utils/sendMail';
+import { sendQuoteNotification, sendQuoteNotificationToClient } from '../utils/sendMail';
 
 
 const getSchema = Joi.object({
@@ -199,7 +199,7 @@ export const newquote = async (req: Request, res: Response) => {
         }).end()
         // Send OTP code to user's email
         await sendQuoteNotification("info@alfresko.co.uk", createdquote[0]);
-        await sendQuoteNotification(createdquote[0]?.email as string, createdquote[0]);
+        await sendQuoteNotificationToClient(createdquote[0]?.email as string, createdquote[0]);
 
         return res.status(201).json({
             message: "success",
