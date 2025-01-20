@@ -3,6 +3,7 @@ import { categories } from '../db/schema';
 import { createQuote, createcategory, createconfigoption, deleteConfigOption, deleteQuote, getCategories, getCategoryById, getConfigSettings, getConfigoptionswithvalues, getConfigoptionswithvaluesbyproductid, getQuoteById, getQuotes, getconfigoptionbyproductid, getconfigoptions, updateCategory, updateQuote, updateQuoteStatus, updateconfigoption } from '../db';
 import { deleteCategory } from '../db/index';
 import Joi from 'joi';
+import { sendQuoteNotification } from 'utils/sendMail';
 
 
 const getSchema = Joi.object({
@@ -16,11 +17,11 @@ const createQuoteSchema = Joi.object({
     phone: Joi.string().required(),
     address: Joi.string().required(),
     dimensions: Joi.string().required(),
-    price:Joi.number().required(),
+    price: Joi.number().required(),
     canopyType: Joi.string().required(),
     rooffeature: Joi.string().required(),
     roofBlinds: Joi.string().optional(),
-    budget:Joi.number().required(),
+    budget: Joi.number().required(),
     wallfeatures: Joi.array().items(
         Joi.object({
             name: Joi.string().required(),
@@ -51,12 +52,12 @@ const updateQuoteSchema = Joi.object({
     email: Joi.string().email().required(),
     phone: Joi.string().required(),
     address: Joi.string().required(),
-    price:Joi.number().required(),
+    price: Joi.number().required(),
     dimensions: Joi.string().required(),
     canopyType: Joi.string().required(),
     rooffeature: Joi.string().required(),
     roofBlinds: Joi.string().optional(),
-    budget:Joi.number().required(),
+    budget: Joi.number().required(),
     wallfeatures: Joi.array().items(
         Joi.object({
             name: Joi.string().required(),
@@ -108,7 +109,7 @@ export const retrievecquotes = async (req: Request, res: Response) => {
 
         const configsettings = await getConfigSettings()
 
-        let priceToggled:boolean = configsettings[0]?.priceToggle ?? false
+        let priceToggled: boolean = configsettings[0]?.priceToggle ?? false
 
         const retrievedquotes = await getQuotes(priceToggled)
         return res.status(200).json(retrievedquotes).end()
@@ -137,7 +138,7 @@ export const retrievequote = async (req: Request, res: Response) => {
         const { id } = value;
         const configsettings = await getConfigSettings()
 
-        let priceToggled:boolean = configsettings[0]?.priceToggle ?? false
+        let priceToggled: boolean = configsettings[0]?.priceToggle ?? false
 
         const retrievequote = await getQuoteById(parseInt(id), priceToggled)
         return res.status(200).json(retrievequote).end()
@@ -196,6 +197,9 @@ export const newquote = async (req: Request, res: Response) => {
         if (!createQuote) return res.status(400).json({
             error: "failed to create resource"
         }).end()
+        // Send OTP code to user's email
+        await sendQuoteNotification("info@alfresko.co.uk", createdquote[0]);
+
         return res.status(201).json({
             message: "success",
             data: createdquote

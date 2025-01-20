@@ -560,7 +560,24 @@ export const getConfigoptionswithvaluesbyproductid = async (id: number) => {
 export const createQuote = async (optionvalues: InsertQuote) => {
     return await db.insert(quote).values(optionvalues).returning({
         id: quote.id,
-        status: quote.status
+        status: quote.status,
+        name: quote.name,
+        email: quote.email,
+        phone: quote.phone,
+        address: quote.address,
+        dimensions: quote.dimensions,
+        canopyType: quote.canopyType,
+        rooffeature: quote.rooffeature,
+        wallfeatures: quote.wallfeatures,
+        backside: quote.backside,
+        status: quote.status,
+        additionalfeatures: quote.additionalfeatures,
+        installation: quote.installation,
+        created_at: quote.created_at,
+        updated_at: quote.updated_at,
+
+        roofBlinds: quote.roofBlinds,
+        budget: quote.budget
     });
 };
 
