@@ -1,3 +1,4 @@
+import { url } from "./constants";
 import { transporter } from "./NodeMailer";
 
 const sendEmail = async (email: string, token: string) => {
@@ -27,7 +28,7 @@ const sendEmail = async (email: string, token: string) => {
 };
 
 export const sendQuoteNotification = async (adminEmail: string, quoteDetails: any) => {
-    const logoUrl = 'https://path/logo.png'; // Replace with your logo URL
+    const logoUrl = url + 'logo.jpg'; ; // Replace with your logo URL
     const { name, email, phone, dimensions, canopyType, rooffeature, additionalfeatures, budget } = quoteDetails;
 
     const mailOptions = {
@@ -63,7 +64,7 @@ export const sendQuoteNotification = async (adminEmail: string, quoteDetails: an
 
 
 export const sendQuoteNotificationToClient = async (adminEmail: string, quoteDetails: any) => {
-    const logoUrl = 'https://path/logo.png'; // Replace with your logo URL
+    const logoUrl = url + 'logo.jpg'; // Replace with your logo URL
     const { name, email, phone, dimensions, price, canopyType, rooffeature, additionalfeatures, budget, wallfeatures } = quoteDetails;
 
     const wallFeaturesList = wallfeatures.map(
