@@ -48,17 +48,20 @@ export const createConfigSettingsHandler = async (req: Request, res: Response) =
         }
 
 
+        const existingconfigsettings = await getConfigSettings();
+
+        if(existingconfigsettings.length >= 1){
+            return res.status(403).json({
+                error: "There is an already consisting config"
+            }).end()
+        }
+        
+
         const newConfigSetting = await createConfigSettings({
             priceToggle
         });
 
-
         return res.status(201).json(newConfigSetting).end();
-
-
-
-
-
     } catch (error) {
         return res.status(500).json({ error: error?.message }).end();
     }
