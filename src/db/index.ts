@@ -570,6 +570,7 @@ export const createQuote = async (optionvalues: InsertQuote) => {
         rooffeature: quote.rooffeature,
         wallfeatures: quote.wallfeatures,
         backside: quote.backside,
+        price:quote.price,
         status: quote.status,
         additionalfeatures: quote.additionalfeatures,
         installation: quote.installation,
