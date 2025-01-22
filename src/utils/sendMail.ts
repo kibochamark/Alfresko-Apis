@@ -37,7 +37,7 @@ const sendEmail = async (email: string, token: string) => {
 
 export const sendQuoteNotification = async (adminEmail: string, quoteDetails: any) => {
     const logoUrl = url + 'logo.jpg';; // Replace with your logo URL
-    const { name, email, phone, dimensions, canopyType, rooffeature, additionalfeatures, budget } = quoteDetails;
+    const { name, email, phone, address, dimensions,  canopyType, rooffeature, additionalfeatures, budget } = quoteDetails;
 
 
 
@@ -45,7 +45,7 @@ export const sendQuoteNotification = async (adminEmail: string, quoteDetails: an
 
 
     const mailOptions = {
-        from: process.env.EMAIL ?? "kibochamark@gmail.com",
+        from: process.env.EMAIL ?? "info@alfresko.co.uk",
         to: adminEmail,
         subject: "🌟 New Quote Submission Alert",
         html: `
@@ -56,6 +56,7 @@ export const sendQuoteNotification = async (adminEmail: string, quoteDetails: an
     <h2 style="color: #4CAF50; font-size: 24px; text-align: center; margin-bottom: 10px;">🌟 New Quote Submission Alert</h2>
     <p style="text-align: center; font-size: 16px; color: #555; margin-bottom: 20px;">A new quote has been submitted by <strong>${name}</strong>. Here's a quick snapshot:</p>
     <ul style="list-style: none; padding: 0; margin: 0; font-size: 16px; color: #333;">
+        <li style="background: #fff; padding: 10px 15px; border-radius: 6px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);"><strong>Dimensions:</strong> ${address}</li>
         <li style="background: #fff; padding: 10px 15px; border-radius: 6px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);"><strong>Dimensions:</strong> ${dimensions}</li>
         <li style="background: #fff; padding: 10px 15px; border-radius: 6px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);"><strong>Canopy Type:</strong> ${canopyType}</li>
         <li style="background: #fff; padding: 10px 15px; border-radius: 6px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);"><strong>Roof Material:</strong> ${rooffeature}</li>
@@ -95,7 +96,7 @@ export const sendQuoteNotificationToClient = async (adminEmail: string, quoteDet
     const formattedPrice = formatter.format(price);
 
     const mailOptions = {
-        from: process.env.EMAIL ?? "kibochamark@gmail.com",
+        from: process.env.EMAIL ?? "info@alfresko.co.uk",
         to: adminEmail,
         subject: "Your Dream Canopy Quote is Ready",
         html: `
