@@ -1,8 +1,16 @@
 import { url } from "./constants";
 import { transporter } from "./NodeMailer";
 
+
+// Format budget and price in GBP
+const formatter = new Intl.NumberFormat('en-GB', {
+    style: 'currency',
+    currency: 'GBP',
+});
+
+
 const sendEmail = async (email: string, token: string) => {
-    const logoUrl = 'https://path/logo.png'; // Replace with your logo 
+    const logoUrl = url + 'logo.jpg';  // Replace with your logo 
 
     const mailOptions = {
         from: process.env.EMAIL ?? "kibochamark@gmail.com",
@@ -28,8 +36,13 @@ const sendEmail = async (email: string, token: string) => {
 };
 
 export const sendQuoteNotification = async (adminEmail: string, quoteDetails: any) => {
-    const logoUrl = url + 'logo.jpg'; ; // Replace with your logo URL
+    const logoUrl = url + 'logo.jpg';; // Replace with your logo URL
     const { name, email, phone, dimensions, canopyType, rooffeature, additionalfeatures, budget } = quoteDetails;
+
+
+
+    const formattedBudget = formatter.format(budget);
+
 
     const mailOptions = {
         from: process.env.EMAIL ?? "kibochamark@gmail.com",
@@ -45,7 +58,7 @@ export const sendQuoteNotification = async (adminEmail: string, quoteDetails: an
                     <li><strong>Canopy Type:</strong> ${canopyType}</li>
                     <li><strong>Roof Material:</strong> ${rooffeature}</li>
                     <li><strong>Additional Features:</strong> ${additionalfeatures}</li>
-                    <li><strong>Budget:</strong> GBP ${budget}</li>
+                    <li><strong>Budget:</strong>${formattedBudget}</li>
                 </ul>
                 <p>📞 <strong>Contact:</strong> <a href="mailto:${email}">${email}</a> | ${phone}</p>
                 <p>Cheers,</p>
@@ -71,6 +84,11 @@ export const sendQuoteNotificationToClient = async (adminEmail: string, quoteDet
         (feature: { name: string; description: string }) => `<li><strong>${feature.name}:</strong> ${feature.description}</li>`
     ).join("");
 
+
+
+    const formattedBudget = formatter.format(budget);
+    const formattedPrice = formatter.format(price);
+
     const mailOptions = {
         from: process.env.EMAIL ?? "kibochamark@gmail.com",
         to: adminEmail,
@@ -89,10 +107,10 @@ export const sendQuoteNotificationToClient = async (adminEmail: string, quoteDet
                 <p><strong>Canopy Type:</strong> ${canopyType}</p>
                 <p><strong>Roof Material:</strong> ${rooffeature}</p>
                 <p><strong>Extra Touches:</strong> ${additionalfeatures}</p>
-                <p><strong>Budget:</strong> GBP ${budget}</p>
+                <p><strong>Budget:</strong>${formattedBudget}</p>
                 <h3>🏠 Wall Features</h3>
                 <ul>${wallFeaturesList}</ul>
-                <p><strong>💰 Your Quote Price:</strong> UGX ${price}</p>
+                <p><strong>💰 Your Quote Price:</strong> UGX ${formattedPrice}</p>
                 <h3>💡 What Happens Next?</h3>
                 <p>This is just the beginning of creating your ideal canopy. If you’d like to tweak any details or add more features, simply hit "Reply," and we’ll update your quote.</p>
                 <p>We can’t wait to make this dream a reality!</p>
