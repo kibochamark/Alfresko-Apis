@@ -60,7 +60,7 @@ export const sendQuoteNotification = async (adminEmail: string, quoteDetails: an
         <li style="background: #fff; padding: 10px 15px; border-radius: 6px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);"><strong>Canopy Type:</strong> ${canopyType}</li>
         <li style="background: #fff; padding: 10px 15px; border-radius: 6px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);"><strong>Roof Material:</strong> ${rooffeature}</li>
         <li style="background: #fff; padding: 10px 15px; border-radius: 6px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);"><strong>Additional Features:</strong> ${additionalfeatures}</li>
-        <li style="background: #fff; padding: 10px 15px; border-radius: 6px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);"><strong>Budget:</strong> ${formattedBudget}</li>
+        <li style="background: #fff; padding: 10px 15px; border-radius: 6px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);"><strong>Budget:</strong>${formattedBudget}</li>
     </ul>
     <div style="margin-top: 20px; font-size: 16px; text-align: center;">
         <p>📞 <strong>Contact:</strong> <a href="mailto:${email}" style="color: #4CAF50; text-decoration: none;">${email}</a> | ${phone}</p>
@@ -115,7 +115,7 @@ export const sendQuoteNotificationToClient = async (adminEmail: string, quoteDet
                 <p><strong>Budget:</strong>${formattedBudget}</p>
                 <h3>🏠 Wall Features</h3>
                 <ul>${wallFeaturesList}</ul>
-                <p><strong>💰 Your Quote Price:</strong> UGX ${formattedPrice}</p>
+                <p><strong>💰 Your Quote Price:</strong>${formattedPrice}</p>
                 <h3>💡 What Happens Next?</h3>
                 <p>This is just the beginning of creating your ideal canopy. If you’d like to tweak any details or add more features, simply hit "Reply," and we’ll update your quote.</p>
                 <p>We can’t wait to make this dream a reality!</p>
