@@ -36,7 +36,7 @@ app.use(cookieParser());
 
 
 // Serve static files from the 'public' directory
-app.use(express.static('public'));
+app.use(express.static(__dirname +'/public'));
 
 
 
