@@ -49,20 +49,25 @@ export const sendQuoteNotification = async (adminEmail: string, quoteDetails: an
         to: adminEmail,
         subject: "🌟 New Quote Submission Alert",
         html: `
-            <div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6;">
-                <img src="${logoUrl}" alt="Company Logo" style="max-width: 200px; margin-bottom: 20px;">
-                <h2>🌟 New Quote Submission Alert</h2>
-                <p>A new quote has been submitted by <strong>${name}</strong>. Here's a quick snapshot:</p>
-                <ul style="list-style: none; padding: 0;">
-                    <li><strong>Dimensions:</strong> ${dimensions}</li>
-                    <li><strong>Canopy Type:</strong> ${canopyType}</li>
-                    <li><strong>Roof Material:</strong> ${rooffeature}</li>
-                    <li><strong>Additional Features:</strong> ${additionalfeatures}</li>
-                    <li><strong>Budget:</strong>${formattedBudget}</li>
-                </ul>
-                <p>📞 <strong>Contact:</strong> <a href="mailto:${email}">${email}</a> | ${phone}</p>
-                <p>Cheers,</p>
-            </div>
+            <div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6; background-color: #f9f9f9; padding: 20px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); max-width: 600px; margin: 0 auto;">
+    <div style="text-align: center; margin-bottom: 20px;">
+        <img src="${logoUrl}" alt="Company Logo" style="max-width: 150px; border-radius: 4px;">
+    </div>
+    <h2 style="color: #4CAF50; font-size: 24px; text-align: center; margin-bottom: 10px;">🌟 New Quote Submission Alert</h2>
+    <p style="text-align: center; font-size: 16px; color: #555; margin-bottom: 20px;">A new quote has been submitted by <strong>${name}</strong>. Here's a quick snapshot:</p>
+    <ul style="list-style: none; padding: 0; margin: 0; font-size: 16px; color: #333;">
+        <li style="background: #fff; padding: 10px 15px; border-radius: 6px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);"><strong>Dimensions:</strong> ${dimensions}</li>
+        <li style="background: #fff; padding: 10px 15px; border-radius: 6px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);"><strong>Canopy Type:</strong> ${canopyType}</li>
+        <li style="background: #fff; padding: 10px 15px; border-radius: 6px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);"><strong>Roof Material:</strong> ${rooffeature}</li>
+        <li style="background: #fff; padding: 10px 15px; border-radius: 6px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);"><strong>Additional Features:</strong> ${additionalfeatures}</li>
+        <li style="background: #fff; padding: 10px 15px; border-radius: 6px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);"><strong>Budget:</strong> ${formattedBudget}</li>
+    </ul>
+    <div style="margin-top: 20px; font-size: 16px; text-align: center;">
+        <p>📞 <strong>Contact:</strong> <a href="mailto:${email}" style="color: #4CAF50; text-decoration: none;">${email}</a> | ${phone}</p>
+        <p style="margin-top: 10px;">Cheers,</p>
+    </div>
+</div>
+
         `,
     };
 
