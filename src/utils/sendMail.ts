@@ -70,8 +70,7 @@ export const sendQuoteNotification = async (adminEmail: string, quoteDetails: an
 
 
 export const sendQuoteNotificationToClient = async (adminEmail: string, quoteDetails: any) => {
-    // console.log(quoteDetails, "qty")
-    const logoUrl = 'https://path/logo.png'; // Replace with your logo 
+    const logoUrl = 'https://path/logo.png'; // Replace with your logo URL
     const { name, email, phone, dimensions, price, canopyType, rooffeature, additionalfeatures, budget, wallfeatures } = quoteDetails;
 
     const wallFeaturesList = wallfeatures.map(
@@ -81,24 +80,41 @@ export const sendQuoteNotificationToClient = async (adminEmail: string, quoteDet
     const mailOptions = {
         from: process.env.EMAIL ?? "kibochamark@gmail.com",
         to: adminEmail,
-        subject: "New Quote Created",
+        subject: "Your Dream Canopy Quote is Ready",
         html: `
-            <div style="font-family: Arial, sans-serif; color: #333;">
+            <div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6;">
                 <img src="${logoUrl}" alt="Company Logo" style="max-width: 200px; margin-bottom: 20px;">
-                <h2>New Quote Created</h2>
-                <p><strong>Customer Name:</strong> ${name}</p>
+                <h2>Your Dream Canopy Quote is Ready</h2>
+                <p>Hi ${name},</p>
+                <p>Based on the details you provided, here’s a sneak peek into your dream setup:</p>
+                <p><strong>Name:</strong> ${name}</p>
                 <p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
                 <p><strong>Phone:</strong> ${phone}</p>
-                <p><strong>Dimensions:</strong> ${dimensions}</p>
+                <h3>✨ Project Highlights</h3>
+                <p><strong>Dimensions:</strong> Perfectly tailored at ${dimensions}</p>
                 <p><strong>Canopy Type:</strong> ${canopyType}</p>
                 <p><strong>Roof Material:</strong> ${rooffeature}</p>
-                <p><strong>Additional Features:</strong> ${additionalfeatures}</p>
+                <p><strong>Extra Touches:</strong> ${additionalfeatures}</p>
                 <p><strong>Budget:</strong> GBP ${budget}</p>
-                <p><strong>Estimated Price:</strong> UGX ${price}</p>
-                <h3>Wall Features:</h3>
+                <h3>🏠 Wall Features</h3>
                 <ul>${wallFeaturesList}</ul>
+                <p><strong>💰 Your Quote Price:</strong> UGX ${price}</p>
+                <h3>💡 What Happens Next?</h3>
+                <p>This is just the beginning of creating your ideal canopy. If you’d like to tweak any details or add more features, simply hit "Reply," and we’ll update your quote.</p>
+                <p>We can’t wait to make this dream a reality!</p>
+                <h3>🌈 Why Choose Us?</h3>
+                <ul>
+                    <li><strong>Tailored Perfection:</strong> Every project is customized for you.</li>
+                    <li><strong>Attention to Detail:</strong> From sleek designs to thoughtful touches, we’ve got you covered.</li>
+                    <li><strong>Customer Delight:</strong> Your happiness fuels our passion!</li>
+                </ul>
+                <h3>📞 Contact Us</h3>
+                <p>Feel free to reach out anytime.</p>
+                <p>8, Willow Park, Langley Park, Durham DH7 9FF</p>
+                <p>Email: <a href="mailto:info@alfresko.co.uk">info@alfresko.co.uk</a> | Phone: 07743896460</p>
+                <p>Thank you for choosing Alfresko!</p>
             </div>
-        `
+        `,
     };
 
     try {
@@ -108,5 +124,6 @@ export const sendQuoteNotificationToClient = async (adminEmail: string, quoteDet
         console.error('Error sending email:', error);
     }
 };
+
 
 export default sendEmail;
