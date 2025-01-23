@@ -84,7 +84,7 @@ export const sendQuoteNotification = async (adminEmail: string, quoteDetails: an
 
 export const sendQuoteNotificationToClient = async (adminEmail: string, quoteDetails: any) => {
     const logoUrl = url + 'logo.jpg'; // Replace with your logo URL
-    const { name, email, phone, dimensions, price, canopyType, rooffeature, additionalfeatures, budget, wallfeatures } = quoteDetails;
+    const { name, email, phone, address, dimensions, price, canopyType, rooffeature, additionalfeatures, budget, wallfeatures } = quoteDetails;
 
     const wallFeaturesList = wallfeatures.map(
         (feature: { name: string; description: string }) => `<li><strong>${feature.name}:</strong> ${feature.description}</li>`
