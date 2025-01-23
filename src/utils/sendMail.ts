@@ -109,6 +109,7 @@ export const sendQuoteNotificationToClient = async (adminEmail: string, quoteDet
                 <p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
                 <p><strong>Phone:</strong> ${phone}</p>
                 <h3>✨ Project Highlights</h3>
+                <p><strong>Address:</strong>${address}</p>
                 <p><strong>Dimensions:</strong> Perfectly tailored at ${dimensions}</p>
                 <p><strong>Canopy Type:</strong> ${canopyType}</p>
                 <p><strong>Roof Material:</strong> ${rooffeature}</p>
