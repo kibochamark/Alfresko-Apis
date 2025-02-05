@@ -37,7 +37,7 @@ const sendEmail = async (email: string, token: string) => {
 
 export const sendQuoteNotification = async (adminEmail: string, quoteDetails: any) => {
     const logoUrl = url + 'logo.jpg';; // Replace with your logo URL
-    const { name, email, phone, address, dimensions,  canopyType, rooffeature, timeframe, additionalfeatures, budget } = quoteDetails;
+    const { name, email, phone, address, dimensions, canopyType, rooffeature, timeframe, additionalfeatures, budget } = quoteDetails;
 
 
 
@@ -85,7 +85,7 @@ export const sendQuoteNotification = async (adminEmail: string, quoteDetails: an
 
 export const sendQuoteNotificationToClient = async (adminEmail: string, quoteDetails: any) => {
     const logoUrl = url + 'logo.jpg'; // Replace with your logo URL
-    const { name, email, phone, address, dimensions, price, canopyType, rooffeature, timeframe, additionalfeatures, budget, wallfeatures, backside} = quoteDetails;
+    const { name, email, phone, address, dimensions, price, canopyType, rooffeature, timeframe, additionalfeatures, budget, wallfeatures, backside } = quoteDetails;
 
     const wallFeaturesList = wallfeatures.map(
         (feature: { name: string; description: string }) => `<li><strong>${feature.name}:</strong> ${feature.description}</li>`
@@ -131,7 +131,7 @@ export const sendQuoteNotificationToClient = async (adminEmail: string, quoteDet
                     <li><strong>Customer Delight:</strong> Your happiness fuels our passion!</li>
                 </ul>
                 <h3>📞 Contact Us</h3>
-                <p>This is not a control offer, which is offered as a subject to survey</p>
+                <p>This is not an offer of contract, a personalised estimate will be issued subject to survey</p>
                 <p>Feel free to reach out anytime.</p>
                 <p>8, Willow Park, Langley Park, Durham DH7 9FF</p>
                 <p>Email: <a href="mailto:info@alfresko.co.uk">info@alfresko.co.uk</a> | Phone: 07743896460</p>
